@@ -1,9 +1,8 @@
-#include <iostream>
-#include "MarketData.h"
+#include "HistoricalData.h"
 
 int main() {
 
-    MarketData data;
+    HistoricalData data;
 
     //data.ReadCSV("../data/data.csv"); // Partial file
     data.ReadCSV("../data/data_headers.csv", true); // Partial file with headers
