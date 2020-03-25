@@ -9,9 +9,15 @@
 #include <sstream>
 
 
-void HistoricalData::ReadCSV(const std::string &fileName, bool has_col_headers) {
+// **Returns a ptr to a csv on the heap
+//std::vector<std::vector<std::string>> *HistoricalData::ReadCSV(const std::string &fileName, bool has_col_headers) {
+// **Returns a copy of the csv
+std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string &fileName, bool has_col_headers) {
     std::ifstream file;
     file.open(fileName);
+
+    //std::vector<std::vector<std::string>> *csv = new std::vector<std::vector<std::string>>; // **Ptr to csv on the heap
+    std::vector<std::vector<std::string>> csv;
 
     if(file.is_open()) {
         std::cout << "Reading file..." << std::endl;
@@ -22,41 +28,45 @@ void HistoricalData::ReadCSV(const std::string &fileName, bool has_col_headers) 
             line.clear();
         }
 
-        while(std::getline(file, line)) { // Reads each line of .csv file
+        while (std::getline(file, line)) { // Reads each line of .csv file
+            std::stringstream ss(line);
+            std::string str;
 
-            OrderUpdate update = HistoricalData::ProcessLine(line); // Processes line and returns an OrderUpdate object
+            std::vector<std::string> row;
 
-            update.HandleUpdate(update); // Handles the update
+            while (std::getline(ss, str, ',')) {
+                row.push_back(str);
+            }
+
+            //csv->push_back(row); // **Adds row to csv on heap
+            csv.push_back(row);
         }
-        std::cout << "Complete.";
+        std::cout << "Complete." << std::endl;
     }
     else {
         std::cout << "File not open!!!" << std:: endl;
     }
 
     file.close();
+
+    //return *csv // **Return ptr to csv
+    return csv; // Return csv
 }
 
-OrderUpdate HistoricalData::ProcessLine(const std::string &line) {
-    std::stringstream ss(line);
-    std::string str;
+OrderUpdate HistoricalData::ProcessLine(const std::vector<std::string> &line) {
 
     unsigned long long int timestamp;
     int id, price, qty;
-    std::string side, action;
+    char side, action;
 
-    std::getline(ss, str, ','); // Reads timestamp
-    timestamp = std::stoull(str); // Converts timestamp to unsigned long long int
-    std::getline(ss, side, ','); // Reads side
-    std::getline(ss, action, ','); // Reads action
-    std::getline(ss, str, ','); // Reads id
-    id = std::stoi(str); // Converts id to int
-    std::getline(ss, str, ','); // Reads price
-    price = std::stoi(str); // Converts price to int
-    std::getline(ss, str); // Reads quantity
-    qty = std::stoi(str); // Converts quantity to int
+    timestamp = std::stoull(line[0]);
+    side = line[1][0];
+    action = line[2][0];
+    id = std::stoi(line[3]);
+    price = std::stoi(line[4]);
+    qty = std::stoi(line[5]);
 
-    OrderUpdate update(timestamp, side[0], action[0], id, price, qty); // Creates OrderUpdate object
+    OrderUpdate update(timestamp, side, action, id, price, qty); // Creates OrderUpdate object
 
     return update;
 }
