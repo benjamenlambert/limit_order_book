@@ -5,6 +5,8 @@
 #ifndef LIMIT_ORDER_BOOK_ORDERUPDATE_H
 #define LIMIT_ORDER_BOOK_ORDERUPDATE_H
 
+#include <iostream>
+#include <vector>
 
 #include "Message.h"
 
@@ -13,9 +15,6 @@ class OrderUpdate : public Message {
 public:
     OrderUpdate();
     OrderUpdate(unsigned long long int timestamp, char side, char action, int id, int price, int qty);
-
-    // Handles an order update.
-    void HandleUpdate(const OrderUpdate &update);
 
     unsigned long long int timestamp_; // Microseconds since the market open.
     char side_;

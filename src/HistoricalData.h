@@ -27,13 +27,6 @@ public:
     //std::vector<std::vector<std::string>> *ReadCSV(const std::string &fileName, bool has_col_headers=false);
     // **Returns a copy of the csv
     std::vector<std::vector<std::string>> ReadCSV(const std::string &fileName, bool has_col_headers=false);
-
-    // Processes a line (row from csv as a vector of strings) and returns an OrderUpdate object.
-    // Accepts a vector of strings, containing the data contained in an OrderUpdate object, as the sole argument and returns
-    // an OrderUpdate object.
-    // Vector of strings expected to be in the following order: timestamp, side, action, order id, price, quantity.
-    // Expects side and action to be a single character string
-    OrderUpdate ProcessLine(const std::vector<std::string> &line);
 };
 
 

@@ -52,21 +52,3 @@ std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string 
     //return *csv // **Return ptr to csv
     return csv; // Return csv
 }
-
-OrderUpdate HistoricalData::ProcessLine(const std::vector<std::string> &line) {
-
-    unsigned long long int timestamp;
-    int id, price, qty;
-    char side, action;
-
-    timestamp = std::stoull(line[0]);
-    side = line[1][0];
-    action = line[2][0];
-    id = std::stoi(line[3]);
-    price = std::stoi(line[4]);
-    qty = std::stoi(line[5]);
-
-    OrderUpdate update(timestamp, side, action, id, price, qty); // Creates OrderUpdate object
-
-    return update;
-}

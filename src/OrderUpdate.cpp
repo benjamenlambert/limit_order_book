@@ -24,7 +24,3 @@ OrderUpdate::OrderUpdate(unsigned long long int timestamp, char side, char actio
     price_ = price;
     qty_ = qty;
 }
-
-void OrderUpdate::HandleUpdate(const OrderUpdate &update) {
-    std::cout << update.timestamp_ << std::endl;
-}

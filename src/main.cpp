@@ -28,11 +28,12 @@ int main() {
     //std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/data_headers.csv", true); // Partial file with headers
     std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190610.csv", true); // Full file
 
-    std::cout << "CSV contains " << csv.size() << " rows." << std::endl;
-
-    // Output csv contents
-    /*
     int num_rows = csv.size();
+
+    std::cout << "CSV contains " << num_rows << " rows." << std::endl;
+
+     // Output csv contents
+    /*
     int num_cols = csv[0].size();
 
     for (int i = 0; i < num_rows; i++) {
@@ -40,10 +41,12 @@ int main() {
             std::cout << csv[i][j] << " ";
         std::cout << std::endl;
     }
-    for (int i = 0; i < num_rows; i++) {
-        std::cout << "Timestamp : " << data.ProcessLine(csv[i]).timestamp_ << " Price : " << data.ProcessLine(csv[i]).price_ << std::endl;
-    }
      */
+
+    for (int i = 0; i < num_rows; i++) {
+        OrderUpdate update(std::stoull(csv[i][0]), csv[i][1][0], csv[i][2][0],
+                std::stoi(csv[i][3]), std::stoi(csv[i][4]), std::stoi(csv[i][5]));
+    }
 
     return 0;
 }
