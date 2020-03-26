@@ -1,4 +1,6 @@
 #include "HistoricalData.h"
+#include "Order.h"
+#include "PriceLevel.h"
 
 int main() {
 
@@ -25,8 +27,8 @@ int main() {
 
     // Copy csv from ReadCSV stack
     //data.ReadCSV("../data/hash_data.csv"); // Partial file
-    //std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/data_headers.csv", true); // Partial file with headers
-    std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190610.csv", true); // Full file
+    std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/data_9990.csv", true); // Partial file with headers
+    //std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190610.csv", true); // Full file
 
     int num_rows = csv.size();
 
@@ -43,9 +45,19 @@ int main() {
     }
      */
 
+    PriceLevel level;
+
     for (int i = 0; i < num_rows; i++) {
         OrderUpdate update(std::stoull(csv[i][0]), csv[i][1][0], csv[i][2][0],
                 std::stoi(csv[i][3]), std::stoi(csv[i][4]), std::stoi(csv[i][5]));
+
+        level.AddOrder(update);
+    }
+
+    std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
+
+    for (auto &iter: level.GetOrders()) {
+        std::cout << "id: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
     }
 
     return 0;
