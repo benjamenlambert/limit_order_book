@@ -10,16 +10,21 @@
 #include "Order.h"
 
 // A single price level within the book.
-// Represented as a price and a hash containing orders at that price
+// Represented as a price and an unordered map containing orders at that price
 class PriceLevel {
 public:
+    PriceLevel();
+    PriceLevel(int order_id, const Order &order);
+
     const Order &AddOrder(int order_id, const Order &order);
     const Order &ModifyOrder(const OrderUpdate &update);
     int RemoveOrder(int order_id);
-    int NumOrders();
+
     const Order &GetOrder(int id);
     const std::unordered_map<int, Order> &GetOrders();
     int GetSize();
+
+    int NumOrders();
 
 private:
     int price_;

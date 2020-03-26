@@ -7,6 +7,14 @@
 #include "OrderUpdate.h"
 
 
+PriceLevel::PriceLevel() {
+
+}
+
+PriceLevel::PriceLevel(int order_id, const Order &order) {
+    AddOrder(order_id, order);
+}
+
 const Order &PriceLevel::AddOrder(int order_id, const Order &order) {
     int id = order_id;
     orders_.insert(std::make_pair(id, order));
@@ -29,18 +37,18 @@ int PriceLevel::RemoveOrder(int order_id) {
     return orders_.erase(id);
 }
 
-int PriceLevel::NumOrders() {
-    return orders_.size();
+const Order &PriceLevel::GetOrder(int id) {
+    return orders_.at(id);
 }
 
 const std::unordered_map<int, Order> &PriceLevel::GetOrders() {
     return orders_;
 }
 
-const Order &PriceLevel::GetOrder(int id) {
-    return orders_.at(id);
-}
-
 int PriceLevel::GetSize() {
     return size_;
+}
+
+int PriceLevel::NumOrders() {
+    return orders_.size();
 }

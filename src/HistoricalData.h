@@ -20,12 +20,6 @@ public:
     // Accepts the filename of the .csv file as a string as the sole required argument.
     // Optionally accepts hasColHeaders as a boolean. Default value is false.  If true, the first line containing
     // header/column names will be ignored.
-    // **First version returns a ptr to a csv on the heap (may be required to improve performance by preventing copying
-    // **over csv file on ReadCSV stack).
-    // **Second version returns a copy of the csv from ReadCSV stack.
-    // **Returns a ptr to a csv on the heap
-    //std::vector<std::vector<std::string>> *ReadCSV(const std::string &fileName, bool has_col_headers=false);
-    // **Returns a copy of the csv
     std::vector<std::vector<std::string>> ReadCSV(const std::string &fileName, bool has_col_headers=false);
 };
 

@@ -9,14 +9,10 @@
 #include <sstream>
 
 
-// **Returns a ptr to a csv on the heap
-//std::vector<std::vector<std::string>> *HistoricalData::ReadCSV(const std::string &fileName, bool has_col_headers) {
-// **Returns a copy of the csv
 std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string &fileName, bool has_col_headers) {
     std::ifstream file;
     file.open(fileName);
 
-    //std::vector<std::vector<std::string>> *csv = new std::vector<std::vector<std::string>>; // **Ptr to csv on the heap
     std::vector<std::vector<std::string>> csv;
 
     if(file.is_open()) {
@@ -38,7 +34,6 @@ std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string 
                 row.push_back(str);
             }
 
-            //csv->push_back(row); // **Adds row to csv on heap
             csv.push_back(row);
         }
         std::cout << "Complete." << std::endl;
@@ -49,6 +44,5 @@ std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string 
 
     file.close();
 
-    //return *csv // **Return ptr to csv
     return csv; // Return csv
 }

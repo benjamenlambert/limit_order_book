@@ -10,10 +10,13 @@
 class Order {
 public:
     explicit Order(const OrderUpdate &update);
-    [[nodiscard]] int GetQty() const;
+
+    [[nodiscard]] char GetSide() const;
     [[nodiscard]] int GetPrice() const;
-    int UpdateQty(int qty);
+    [[nodiscard]] int GetQty() const;
+
     int UpdatePrice(int price);
+    int UpdateQty(int qty);
 
 private:
 
