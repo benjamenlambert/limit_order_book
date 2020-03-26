@@ -13,7 +13,6 @@
 // Contains the information contained in an order update.
 class OrderUpdate : public Message {
 public:
-    OrderUpdate();
     OrderUpdate(unsigned long long int timestamp, char side, char action, int id, int price, int qty);
 
     [[nodiscard]] unsigned long long int GetTimestamp() const;
