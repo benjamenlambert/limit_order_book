@@ -6,7 +6,7 @@
 #include "Order.h"
 #include "OrderUpdate.h"
 
-Order PriceLevel::AddOrder(const OrderUpdate &update) {
+const Order &PriceLevel::AddOrder(const OrderUpdate &update) {
     int id = update.id_;
     Order order(update);
     orders_.insert(std::make_pair(id, order));
@@ -16,12 +16,12 @@ Order PriceLevel::AddOrder(const OrderUpdate &update) {
 
 // TODO Need to be able to move to another price point
 // TODO Currently only handles qty change
-Order PriceLevel::ModifyOrder(const OrderUpdate &update) {
+const Order &PriceLevel::ModifyOrder(const OrderUpdate &update) {
     int id = update.id_;
     int prev_qty = orders_.at(id).GetQty();
-    Order order(update);
-    orders_.at(update.id_) = order;
-    size_ += order.GetQty() - prev_qty;
+    int qty = orders_.at(id).UpdateQty(update.qty_);
+    int price = orders_.at(id).UpdatePrice(update.price_);
+    size_ += qty - prev_qty;
     return orders_.at(id);
 }
 
@@ -31,14 +31,18 @@ int PriceLevel::RemoveOrder(const OrderUpdate &update) {
     return orders_.erase(id);
 }
 
-int PriceLevel::NumOrders(){
+int PriceLevel::NumOrders() {
     return orders_.size();
 }
 
-std::unordered_map<int, Order> PriceLevel::GetOrders() {
+const std::unordered_map<int, Order> &PriceLevel::GetOrders() {
     return orders_;
 }
 
-Order PriceLevel::GetOrder(int id) {
+const Order &PriceLevel::GetOrder(int id) {
     return orders_.at(id);
-};
+}
+
+int PriceLevel::GetSize() {
+    return size_;
+}

@@ -20,6 +20,20 @@ Order::Order(const OrderUpdate &update) {
     qty_ = update.qty_;
 }
 
-int Order::GetQty() {
+int Order::GetQty() const {
     return qty_;
+}
+
+int Order::GetPrice() const {
+    return price_;
+}
+
+int Order::UpdateQty(int qty) {
+    qty_ = qty;
+    return qty_;
+}
+
+int Order::UpdatePrice(int price) {
+    price_ = price;
+    return price_;
 }

@@ -14,12 +14,13 @@
 class PriceLevel {
 public:
     //Changed to return by value versus const ref, couldn't get iter.second.GetQty() in main to work with const ref
-    Order AddOrder(const OrderUpdate &update);
-    Order ModifyOrder(const OrderUpdate &update);
+    const Order &AddOrder(const OrderUpdate &update);
+    const Order &ModifyOrder(const OrderUpdate &update);
     int RemoveOrder(const OrderUpdate &update);
     int NumOrders();
-    Order GetOrder(int id);
-    std::unordered_map<int, Order> GetOrders();
+    const Order &GetOrder(int id);
+    const std::unordered_map<int, Order> &GetOrders();
+    int GetSize();
 
 private:
     int size_;
