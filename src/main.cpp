@@ -56,14 +56,16 @@ int main() {
         OrderUpdate update(std::stoull(csv[i][0]), csv[i][1][0], csv[i][2][0],
                 std::stoi(csv[i][3]), std::stoi(csv[i][4]), std::stoi(csv[i][5]));
 
-        if (update.action_ == 'a') {
-            level.AddOrder(update);
+        if (update.GetAction() == 'a') {
+            Order order(update);
+
+            level.AddOrder(update.GetID(), order);
             //std::cout << "Adding order " << update.id_ << " with price " << update.price_ << std::endl;
             //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
             adds ++;
         }
-        else if (update.action_ == 'd') {
-            level.RemoveOrder(update);
+        else if (update.GetAction() == 'd') {
+            level.RemoveOrder(update.GetID());
             //std::cout << "Deleting order " << update.id_ << " with price " << update.price_ << std::endl;
             //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
             removes ++;
@@ -71,13 +73,13 @@ int main() {
         else {
             //std::cout << "Modifying order " << update.id_;
             //std::cout << " Previous qty = " << level.GetOrder(update.id_).GetQty();
-            int prev_price = level.GetOrder(update.id_).GetPrice();
+            int prev_price = level.GetOrder(update.GetID()).GetPrice();
             //std::cout << " Previous price = " << prev_price << std::endl;
 
             level.ModifyOrder(update);
 
             //std::cout << "New qty = " << level.GetOrder(update.id_).GetQty();
-            int new_price = level.GetOrder(update.id_).GetPrice();
+            int new_price = level.GetOrder(update.GetID()).GetPrice();
             //std::cout << " New price = " << new_price << std::endl;
             //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
 

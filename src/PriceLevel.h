@@ -13,16 +13,16 @@
 // Represented as a price and a hash containing orders at that price
 class PriceLevel {
 public:
-    //Changed to return by value versus const ref, couldn't get iter.second.GetQty() in main to work with const ref
-    const Order &AddOrder(const OrderUpdate &update);
+    const Order &AddOrder(int order_id, const Order &order);
     const Order &ModifyOrder(const OrderUpdate &update);
-    int RemoveOrder(const OrderUpdate &update);
+    int RemoveOrder(int order_id);
     int NumOrders();
     const Order &GetOrder(int id);
     const std::unordered_map<int, Order> &GetOrders();
     int GetSize();
 
 private:
+    int price_;
     int size_;
     std::unordered_map<int, Order> orders_;
 };

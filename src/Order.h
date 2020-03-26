@@ -9,7 +9,6 @@
 
 class Order {
 public:
-    Order();
     explicit Order(const OrderUpdate &update);
     [[nodiscard]] int GetQty() const;
     [[nodiscard]] int GetPrice() const;
@@ -20,7 +19,6 @@ private:
 
     unsigned long long int timestamp_; // Microseconds since the market open.
     char side_;
-    char action_;
     int price_;
     int qty_;
 };

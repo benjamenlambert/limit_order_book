@@ -16,6 +16,14 @@ public:
     OrderUpdate();
     OrderUpdate(unsigned long long int timestamp, char side, char action, int id, int price, int qty);
 
+    [[nodiscard]] unsigned long long int GetTimestamp() const;
+    [[nodiscard]] char GetSide() const;
+    [[nodiscard]] char GetAction() const;
+    [[nodiscard]] int GetID() const;
+    [[nodiscard]] int GetPrice() const;
+    [[nodiscard]] int GetQty() const;
+
+private:
     unsigned long long int timestamp_; // Microseconds since the market open.
     char side_;
     char action_;
