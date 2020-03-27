@@ -23,10 +23,10 @@ const Order &PriceLevel::AddOrder(int order_id, const Order &order) {
 }
 
 const Order &PriceLevel::ModifyOrder(const OrderUpdate &update) {
-    int id = update.GetID();
+    int id = update.id;
     int prev_qty = orders_.at(id).GetQty();
-    int qty = orders_.at(id).UpdateQty(update.GetQty());
-    int price = orders_.at(id).UpdatePrice(update.GetPrice());
+    int qty = orders_.at(id).UpdateQty(update.qty);
+    int price = orders_.at(id).UpdatePrice(update.price);
     size_ += qty - prev_qty;
     return orders_.at(id);
 }

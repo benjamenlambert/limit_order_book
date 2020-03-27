@@ -5,10 +5,10 @@
 #include "Order.h"
 
 Order::Order(const OrderUpdate &update) {
-    timestamp_ = update.GetTimestamp();
-    side_ = update.GetSide();
-    price_ = update.GetPrice();
-    qty_ = update.GetQty();
+    timestamp_ = update.timestamp;
+    side_ = update.side;
+    price_ = update.price;
+    qty_ = update.qty;
 }
 
 char Order::GetSide() const {

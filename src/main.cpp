@@ -36,7 +36,7 @@ int main() {
         OrderUpdate update(std::stoull(csv[i][0]), csv[i][1][0], csv[i][2][0],
                 std::stoi(csv[i][3]), std::stoi(csv[i][4]), std::stoi(csv[i][5]));
 
-        if (update.GetAction() == 'a') {
+        if (update.action == 'a') {
             Order order(update);
 
             //level.AddOrder(update.GetID(), order);
@@ -44,7 +44,7 @@ int main() {
             //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
             adds ++;
         }
-        else if (update.GetAction() == 'd') {
+        else if (update.action == 'd') {
             //level.RemoveOrder(update.GetID());
             //std::cout << "Deleting order " << update.id_ << " with price " << update.price_ << std::endl;
             //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;

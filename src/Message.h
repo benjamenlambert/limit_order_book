@@ -6,9 +6,9 @@
 #define LIMIT_ORDER_BOOK_MESSAGE_H
 
 
-// Class for handling messages.
+// Structure for messages.
 // For future implementation.
-class Message {
+struct Message {
 
 };
 
