@@ -8,14 +8,13 @@
 #include <iostream>
 #include <sstream>
 
-
 std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string &fileName, bool has_col_headers) {
     std::ifstream file;
     file.open(fileName);
 
     std::vector<std::vector<std::string>> csv;
 
-    if(file.is_open()) {
+    if (file.is_open()) {
         std::cout << "Reading file..." << std::endl;
         std::string line;
 
@@ -37,9 +36,8 @@ std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string 
             csv.push_back(row);
         }
         std::cout << "Complete." << std::endl;
-    }
-    else {
-        std::cout << "File not open!!!" << std:: endl;
+    } else {
+        std::cout << "File not open!!!" << std::endl;
     }
 
     file.close();

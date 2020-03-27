@@ -14,7 +14,7 @@ int main() {
 
     std::cout << "CSV contains " << num_rows << " rows.\n\n" << std::endl;
 
-     // Output csv contents
+    // Output csv contents
     /*
     int num_cols = csv[0].size();
 
@@ -34,7 +34,7 @@ int main() {
 
     for (int i = 0; i < num_rows; i++) {
         OrderUpdate update(std::stoull(csv[i][0]), csv[i][1][0], csv[i][2][0],
-                std::stoi(csv[i][3]), std::stoi(csv[i][4]), std::stoi(csv[i][5]));
+                           std::stoi(csv[i][3]), std::stoi(csv[i][4]), std::stoi(csv[i][5]));
 
         if (update.action == 'a') {
             Order order(update);
@@ -42,15 +42,13 @@ int main() {
             //level.AddOrder(update.GetID(), order);
             //std::cout << "Adding order " << update.id_ << " with price " << update.price_ << std::endl;
             //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
-            adds ++;
-        }
-        else if (update.action == 'd') {
+            adds++;
+        } else if (update.action == 'd') {
             //level.RemoveOrder(update.GetID());
             //std::cout << "Deleting order " << update.id_ << " with price " << update.price_ << std::endl;
             //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
-            removes ++;
-        }
-        else {
+            removes++;
+        } else {
             //std::cout << "Modifying order " << update.id_;
             //std::cout << " Previous qty = " << level.GetOrder(update.id_).GetQty();
             //int prev_price = level.GetOrder(update.GetID()).GetPrice();
@@ -67,7 +65,7 @@ int main() {
             //    std::cout << "***** PRICE CHANGE ***** PRICE CHANGE ***** PRICE CHANGE *****" << std::endl;
             //    price_changes ++;
             //}
-            mods ++;
+            mods++;
         }
     }
 
@@ -76,7 +74,7 @@ int main() {
     std::cout << " " << removes << " remove order messages." << std::endl;
     std::cout << " " << mods << " modify qty messages." << std::endl;
     std::cout << " " << price_changes << " modify price messages." << std::endl;
-    std::cout << " " << (adds + removes + mods)  << " total messages.\n" << std::endl;
+    std::cout << " " << (adds + removes + mods) << " total messages.\n" << std::endl;
     std::cout << "********************************" << std::endl;
 
     //std::cout << "Price level contains the following " << level.NumOrders() << " orders:" << std::endl;

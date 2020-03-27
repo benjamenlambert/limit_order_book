@@ -8,23 +8,22 @@
 #include "OrderUpdate.h"
 
 class Order {
-public:
-    explicit Order(const OrderUpdate &update);
+ public:
+  explicit Order(const OrderUpdate &update);
 
-    [[nodiscard]] char GetSide() const;
-    [[nodiscard]] int GetPrice() const;
-    [[nodiscard]] int GetQty() const;
+  [[nodiscard]] char GetSide() const;
+  [[nodiscard]] int GetPrice() const;
+  [[nodiscard]] int GetQty() const;
 
-    int UpdatePrice(int price);
-    int UpdateQty(int qty);
+  int UpdatePrice(int price);
+  int UpdateQty(int qty);
 
-private:
+ private:
 
-    unsigned long long int timestamp_; // Microseconds since the market open.
-    char side_;
-    int price_;
-    int qty_;
+  unsigned long long int timestamp_; // Microseconds since the market open.
+  char side_;
+  int price_;
+  int qty_;
 };
-
 
 #endif //LIMIT_ORDER_BOOK_ORDER_H

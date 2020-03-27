@@ -6,7 +6,6 @@
 #include "Order.h"
 #include "OrderUpdate.h"
 
-
 PriceLevel::PriceLevel() {
 
 }

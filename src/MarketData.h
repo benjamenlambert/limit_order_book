@@ -11,5 +11,4 @@ class MarketData {
 
 };
 
-
 #endif //LIMIT_ORDER_BOOK_MARKETDATA_H
