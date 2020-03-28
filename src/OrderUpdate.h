@@ -17,12 +17,12 @@ struct OrderUpdate : public Message {
   int qty;
 
   OrderUpdate(unsigned long long int timestamp, char side, char action, int id, int price, int qty) :
-          timestamp(timestamp),
-          side(side),
-          action(action),
-          id(id),
-          price(price),
-          qty(qty) {}
+      timestamp(timestamp),
+      side(side),
+      action(action),
+      id(id),
+      price(price),
+      qty(qty) {}
 };
 
 #endif //LIMIT_ORDER_BOOK_ORDERUPDATE_H
