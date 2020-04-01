@@ -23,6 +23,10 @@ class PriceLevel {
   const Order &GetOrder(int id);
   const std::unordered_map<int, Order> &GetOrders();
   int GetSize();
+  int GetPrice();
+
+  PriceLevel *left_;
+  PriceLevel *right_;
 
   int NumOrders();
 

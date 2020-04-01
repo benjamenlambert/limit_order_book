@@ -8,7 +8,8 @@ int main() {
   HistoricalData data;
 
   //data.ReadCSV("../data/hash_data.csv"); // Partial file
-  std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/data_9990.csv", true); // Partial file with headers
+  std::vector<std::vector<std::string>>
+      csv = data.ReadCSV("../data/res_20190612_bids.csv", true); // Partial file with headers
   //std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190612.csv", true); // Full file
 
   int num_rows = csv.size();
@@ -45,49 +46,48 @@ int main() {
     if (update.action == 'a') {
       Order order(update);
 
-      PriceLevel *level = bid.FindLevel(order);  // Find the price level
+      PriceLevel *level = bid.FindLevel(order.GetPrice());  // Find the price level
 
       if (level != nullptr) { // If it exists, add the order
         level->AddOrder(update.id, order);
-        std::cout << "Price found." << std::endl;
+        //std::cout << "Adding order " << update.id << " with price " << update.price << " to level : "
+        //          << level->GetPrice() << std::endl;
       } else { // Create the level and add it to the side
         auto *new_level = new PriceLevel(update.id, order);
         bid.InsertLevel(*new_level);
-        std::cout << "Price not found!!!" << std::endl;
+        //std::cout << "Price not found. Adding price level " << new_level->GetPrice() << std::endl;
+        //std::cout << "Now adding order " << update.id << " with price " << update.price << " to level : "
+        //          << bid.FindLevel(order.GetPrice())->GetPrice() << std::endl;
       }
-
-      // Find Level
-      // // If level not found, create level
-
-      //level.AddOrder(update.id, order);
-
-      //level.AddOrder(update.GetID(), order);
-      //std::cout << "Adding order " << update.id_ << " with price " << update.price_ << std::endl;
-      //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
       adds++;
     } else if (update.action == 'd') {
 
-      //level.RemoveOrder(update.GetID());
-      //std::cout << "Deleting order " << update.id_ << " with price " << update.price_ << std::endl;
-      //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
+      //std::cout << "Removing order " << update.id << " with price " << update.price << " from level "
+      //          << bid.FindLevel(update.price)->GetPrice() << std::endl;
+      bid.FindLevel(update.price)->RemoveOrder(update.id);
+
       removes++;
     } else {
-      //std::cout << "Modifying order " << update.id_;
-      //std::cout << " Previous qty = " << level.GetOrder(update.id_).GetQty();
-      //int prev_price = level.GetOrder(update.GetID()).GetPrice();
-      //std::cout << " Previous price = " << prev_price << std::endl;
 
-      //level.ModifyOrder(update);
+      int prev_price = bid.FindLevel(update.price)->GetOrder(update.id).GetPrice();
 
-      //std::cout << "New qty = " << level.GetOrder(update.id_).GetQty();
-      //int new_price = level.GetOrder(update.GetID()).GetPrice();
-      //std::cout << " New price = " << new_price << std::endl;
-      //std::cout << "Price level contains " << level.NumOrders() << " orders." << std::endl;
+      //std::cout << "Modifying order " << update.id << " with price " << update.price << " from level "
+      //          << bid.FindLevel(update.price)->GetPrice() << std::endl;
 
-      //if (new_price != prev_price) {
-      //    std::cout << "***** PRICE CHANGE ***** PRICE CHANGE ***** PRICE CHANGE *****" << std::endl;
-      //    price_changes ++;
-      //}
+      //std::cout << "Previous qty = " << bid.FindLevel(update.price)->GetOrder(update.id).GetQty()
+      //          << " Previous price = " << bid.FindLevel(update.price)->GetOrder(update.id).GetPrice() << std::endl;
+
+      bid.FindLevel(update.price)->ModifyOrder(update);
+
+      int new_price = bid.FindLevel(update.price)->GetOrder(update.id).GetPrice();
+
+      //std::cout << "New qty = " << bid.FindLevel(update.price)->GetOrder(update.id).GetQty() << " New price = "
+      //          << bid.FindLevel(update.price)->GetOrder(update.id).GetPrice() << std::endl;
+
+      if (new_price != prev_price) {
+        std::cout << "***** PRICE CHANGE ***** PRICE CHANGE ***** PRICE CHANGE *****" << std::endl;
+        price_changes++;
+      }
       mods++;
     }
   }

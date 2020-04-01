@@ -11,6 +11,12 @@ PriceLevel::PriceLevel() {
 }
 
 PriceLevel::PriceLevel(int order_id, const Order &order) {
+  size_ = 0;
+  price_ = order.GetPrice();
+
+  left_ = nullptr;
+  right_ = nullptr;
+
   AddOrder(order_id, order);
 }
 
@@ -46,6 +52,10 @@ const std::unordered_map<int, Order> &PriceLevel::GetOrders() {
 
 int PriceLevel::GetSize() {
   return size_;
+}
+
+int PriceLevel::GetPrice() {
+  return price_;
 }
 
 int PriceLevel::NumOrders() {
