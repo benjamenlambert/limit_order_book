@@ -8,9 +8,9 @@
 #include <iostream>
 #include <sstream>
 
-std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string &fileName, bool has_col_headers) {
+std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string &file_name, bool has_col_headers) {
   std::ifstream file;
-  file.open(fileName);
+  file.open(file_name);
 
   std::vector<std::vector<std::string>> csv;
 

@@ -33,7 +33,7 @@ class Side {
 
   void Print(PriceLevel *level);
 
-  int top_of_book_;
+  PriceLevel *top_of_book_;
   PriceLevel *root_;
 };
 

@@ -5,6 +5,7 @@
 #include "Side.h"
 
 Side::Side() {
+  top_of_book_ = nullptr;
   root_ = nullptr;
 }
 
@@ -20,15 +21,6 @@ PriceLevel *Side::InsertLevel(PriceLevel &level) {
   return new_node;
 }
 
-/*
-PriceLevel *Side::InsertLevel(PriceLevel &level) {
-  int price = level.GetPrice();
-
-  PriceLevel *&new_node = Find(price, root_);
-  new_node = new PriceLevel(price, level);
-  return new_node;
-}
-*/
 PriceLevel *Side::FindLevel(int price) {
   return Find(price, root_);
 }
@@ -59,16 +51,18 @@ void Side::PrintSide() {
 //Private
 
 PriceLevel *&Side::Find(int price, PriceLevel *&current_level) {
-  //int current_level_price = current_level->GetPrice();
-
   if (current_level == nullptr) {
-    return current_level; // How do I want to handle this case?
-  } else if (price < current_level->GetPrice()) {
-    return Find(price, current_level->left_);
-  } else if (price > current_level->GetPrice()) {
-    return Find(price, current_level->right_);
-  } else {
     return current_level;
+  } else {
+    int current_level_price = current_level->GetPrice();
+
+    if (price == current_level_price) {
+      return current_level;
+    } else if (price < current_level_price) {
+      return Find(price, current_level->left_);
+    } else {
+      return Find(price, current_level->right_);
+    }
   }
 }
 
