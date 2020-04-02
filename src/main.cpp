@@ -9,11 +9,11 @@ int main() {
   HistoricalData data;
 
   //data.ReadCSV("../data/hash_data.csv"); // Partial file
-  std::vector<std::vector<std::string>>
-      csv = data.ReadCSV("../data/data_9990.csv", true); // Partial file with headers
+  //std::vector<std::vector<std::string>>
+  //    csv = data.ReadCSV("../data/data_9990.csv", true); // Partial file with headers
   //std::vector<std::vector<std::string>>
   //    csv = data.ReadCSV("../data/res_20190612_bids.csv", true); // Partial file with headers
-  //std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190612.csv", true); // Full file
+  std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190612.csv", true); // Full file
 
   int num_rows = csv.size();
 
@@ -49,7 +49,13 @@ int main() {
       }
       adds++;
     } else if (update.action == 'd') {
-      side->FindLevel(update.price)->RemoveOrder(update.id);
+      PriceLevel *level = side->FindLevel(update.price);
+
+      level->RemoveOrder(update.id); // Delete the order
+
+      if (level->GetSize() == 0) { // If the size == 0, delete the level
+        side->RemoveLevel(update.price);
+      }
 
       removes++;
     } else {
