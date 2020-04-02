@@ -17,7 +17,7 @@ class Side {
 
   PriceLevel *InsertLevel(PriceLevel &level);
   PriceLevel *FindLevel(int price);
-  PriceLevel *FindTop();
+  PriceLevel *FindTop(char side);
   PriceLevel *FindMin();
   PriceLevel *FindMax();
   int RemoveLevel(int price);

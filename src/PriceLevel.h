@@ -2,8 +2,8 @@
 // Created by Benjamen Lambert on 3/24/2020.
 //
 
-#ifndef LIMIT_ORDER_BOOK_PRICELEVEL_H
-#define LIMIT_ORDER_BOOK_PRICELEVEL_H
+#ifndef LIMIT_ORDER_BOOK_SRC_PRICELEVEL_H_
+#define LIMIT_ORDER_BOOK_SRC_PRICELEVEL_H_
 
 #include <unordered_map>
 
@@ -36,4 +36,4 @@ class PriceLevel {
   std::unordered_map<int, Order> orders_;
 };
 
-#endif //LIMIT_ORDER_BOOK_PRICELEVEL_H
+#endif //LIMIT_ORDER_BOOK_SRC_PRICELEVEL_H_

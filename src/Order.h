@@ -2,8 +2,8 @@
 // Created by Benjamen Lambert on 3/25/2020.
 //
 
-#ifndef LIMIT_ORDER_BOOK_ORDER_H
-#define LIMIT_ORDER_BOOK_ORDER_H
+#ifndef LIMIT_ORDER_BOOK_SRC_ORDER_H_
+#define LIMIT_ORDER_BOOK_SRC_ORDER_H_
 
 #include "OrderUpdate.h"
 
@@ -26,4 +26,4 @@ class Order {
   int qty_;
 };
 
-#endif //LIMIT_ORDER_BOOK_ORDER_H
+#endif //LIMIT_ORDER_BOOK_SRC_ORDER_H_

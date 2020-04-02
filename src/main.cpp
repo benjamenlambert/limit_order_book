@@ -2,6 +2,7 @@
 #include "Order.h"
 #include "PriceLevel.h"
 #include "Side.h"
+#include "OrderBook.h"
 
 int main() {
 
@@ -9,26 +10,16 @@ int main() {
 
   //data.ReadCSV("../data/hash_data.csv"); // Partial file
   std::vector<std::vector<std::string>>
-      csv = data.ReadCSV("../data/res_20190612_bids.csv", true); // Partial file with headers
+      csv = data.ReadCSV("../data/data_9990.csv", true); // Partial file with headers
+  //std::vector<std::vector<std::string>>
+  //    csv = data.ReadCSV("../data/res_20190612_bids.csv", true); // Partial file with headers
   //std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190612.csv", true); // Full file
 
   int num_rows = csv.size();
 
   std::cout << "CSV contains " << num_rows << " rows.\n\n" << std::endl;
 
-  // Output csv contents
-  /*
-  int num_cols = csv[0].size();
-
-  for (int i = 0; i < num_rows; i++) {
-      for (int j = 0; j < num_cols; j++)
-          std::cout << csv[i][j] << " ";
-      std::cout << std::endl;
-  }
-   */
-
-  Side bid;
-  //PriceLevel level;
+  OrderBook book;
 
   int adds = 0;
   int removes = 0;
@@ -43,46 +34,31 @@ int main() {
                        std::stoi(csv[i][4]),
                        std::stoi(csv[i][5]));
 
+    Side *side = book.GetSide(update.side);
+
     if (update.action == 'a') {
       Order order(update);
-
-      PriceLevel *level = bid.FindLevel(order.GetPrice());  // Find the price level
+      PriceLevel *level = side->FindLevel(order.GetPrice());  // Find the price level
 
       if (level != nullptr) { // If it exists, add the order
         level->AddOrder(update.id, order);
-        //std::cout << "Adding order " << update.id << " with price " << update.price << " to level : "
-        //          << level->GetPrice() << std::endl;
       } else { // Create the level and add it to the side
         auto *new_level = new PriceLevel(update.id, order);
-        bid.InsertLevel(*new_level);
-        //std::cout << "Price not found. Adding price level " << new_level->GetPrice() << std::endl;
-        //std::cout << "Now adding order " << update.id << " with price " << update.price << " to level : "
-        //          << bid.FindLevel(order.GetPrice())->GetPrice() << std::endl;
+
+        side->InsertLevel(*new_level);
       }
       adds++;
     } else if (update.action == 'd') {
-
-      //std::cout << "Removing order " << update.id << " with price " << update.price << " from level "
-      //          << bid.FindLevel(update.price)->GetPrice() << std::endl;
-      bid.FindLevel(update.price)->RemoveOrder(update.id);
+      side->FindLevel(update.price)->RemoveOrder(update.id);
 
       removes++;
     } else {
 
-      int prev_price = bid.FindLevel(update.price)->GetOrder(update.id).GetPrice();
+      int prev_price = side->FindLevel(update.price)->GetOrder(update.id).GetPrice();
 
-      //std::cout << "Modifying order " << update.id << " with price " << update.price << " from level "
-      //          << bid.FindLevel(update.price)->GetPrice() << std::endl;
+      side->FindLevel(update.price)->ModifyOrder(update);
 
-      //std::cout << "Previous qty = " << bid.FindLevel(update.price)->GetOrder(update.id).GetQty()
-      //          << " Previous price = " << bid.FindLevel(update.price)->GetOrder(update.id).GetPrice() << std::endl;
-
-      bid.FindLevel(update.price)->ModifyOrder(update);
-
-      int new_price = bid.FindLevel(update.price)->GetOrder(update.id).GetPrice();
-
-      //std::cout << "New qty = " << bid.FindLevel(update.price)->GetOrder(update.id).GetQty() << " New price = "
-      //          << bid.FindLevel(update.price)->GetOrder(update.id).GetPrice() << std::endl;
+      int new_price = side->FindLevel(update.price)->GetOrder(update.id).GetPrice();
 
       if (new_price != prev_price) {
         std::cout << "***** PRICE CHANGE ***** PRICE CHANGE ***** PRICE CHANGE *****" << std::endl;
@@ -101,13 +77,11 @@ int main() {
             << std::endl;
   std::cout << "********************************" << std::endl;
 
-  //std::cout << "Price level contains the following " << level.NumOrders() << " orders:" << std::endl;
+  book.GetSide('b')->PrintSide();
 
-  //for (auto &iter: level.GetOrders()) {
-  //    std::cout << "id: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
-  //}
+  std::cout << "\n****************************************************************\n" << std::endl;
 
-  bid.PrintSide();
+  book.GetSide('a')->PrintSide();
 
   return 0;
 }

@@ -2,8 +2,8 @@
 // Created by Benjamen Lambert on 3/24/2020.
 //
 
-#ifndef LIMIT_ORDER_BOOK_HISTORICALDATA_H
-#define LIMIT_ORDER_BOOK_HISTORICALDATA_H
+#ifndef LIMIT_ORDER_BOOK_SRC_HISTORICALDATA_H_
+#define LIMIT_ORDER_BOOK_SRC_HISTORICALDATA_H_
 
 #include <iostream>
 #include <vector>
@@ -22,4 +22,4 @@ class HistoricalData : public MarketData {
   std::vector<std::vector<std::string>> ReadCSV(const std::string &file_name, bool has_col_headers = false);
 };
 
-#endif //LIMIT_ORDER_BOOK_HISTORICALDATA_H
+#endif //LIMIT_ORDER_BOOK_SRC_HISTORICALDATA_H_

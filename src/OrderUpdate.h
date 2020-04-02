@@ -2,8 +2,8 @@
 // Created by Benjamen Lambert on 3/24/2020.
 //
 
-#ifndef LIMIT_ORDER_BOOK_ORDERUPDATE_H
-#define LIMIT_ORDER_BOOK_ORDERUPDATE_H
+#ifndef LIMIT_ORDER_BOOK_SRC_ORDERUPDATE_H_
+#define LIMIT_ORDER_BOOK_SRC_ORDERUPDATE_H_
 
 #include "Message.h"
 
@@ -25,4 +25,4 @@ struct OrderUpdate : public Message {
       qty(qty) {}
 };
 
-#endif //LIMIT_ORDER_BOOK_ORDERUPDATE_H
+#endif //LIMIT_ORDER_BOOK_SRC_ORDERUPDATE_H_

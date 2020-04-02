@@ -25,6 +25,14 @@ PriceLevel *Side::FindLevel(int price) {
   return Find(price, root_);
 }
 
+PriceLevel *Side::FindTop(char side) {
+  if (side == 'b') {
+    return Max(root_);
+  } else {
+    return Min(root_);
+  }
+
+}
 PriceLevel *Side::FindMin() {
   return Min(root_);
 }
