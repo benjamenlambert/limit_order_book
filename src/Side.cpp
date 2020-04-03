@@ -67,7 +67,7 @@ PriceLevel *&Side::Find(int price, PriceLevel *&current_level) {
 
 PriceLevel *Side::Min(PriceLevel *current_level) {
   if (current_level == nullptr)
-    return nullptr; // How do I want to handle this case?
+    return current_level; // How do I want to handle this case?
     //throw std::runtime_error("Error: Node not found");
   else if (current_level->left_ == nullptr)
     return current_level;
@@ -77,7 +77,7 @@ PriceLevel *Side::Min(PriceLevel *current_level) {
 
 PriceLevel *Side::Max(PriceLevel *current_level) {
   if (current_level == nullptr)
-    return nullptr; // How do I want to handle this case?
+    return current_level; // How do I want to handle this case?
     //throw std::runtime_error("Error: Node not found");
   else if (current_level->right_ == nullptr)
     return current_level;
@@ -100,7 +100,7 @@ PriceLevel *&Side::Remove(PriceLevel *&level) {
 
 PriceLevel *Side::DestroySide(PriceLevel *current_level) {
   if (current_level == nullptr) {
-    return nullptr;
+    return current_level;
     //throw std::runtime_error("Side empty");
   } else {
     DestroySide(current_level->left_);
@@ -108,10 +108,11 @@ PriceLevel *Side::DestroySide(PriceLevel *current_level) {
     delete current_level;
     current_level = nullptr;
   }
-  return nullptr;
+  return current_level;
 }
 
 void Side::Print(PriceLevel *level) {
+
   if (level != nullptr) {
     Print(level->left_);
     std::cout << "Price Level : " << level->GetPrice() << std::endl;
@@ -121,4 +122,5 @@ void Side::Print(PriceLevel *level) {
     }
     Print(level->right_);
   }
+
 }

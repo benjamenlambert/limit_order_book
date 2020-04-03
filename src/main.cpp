@@ -71,11 +71,11 @@ int main() {
             << std::endl;
   std::cout << "********************************" << std::endl;
 
-  //book.GetSide('b')->PrintSide();
+  book.GetSide('b')->PrintSide();
 
-  //std::cout << "\n****************************************************************\n" << std::endl;
+  std::cout << "\n****************************************************************\n" << std::endl;
 
-  //book.GetSide('a')->PrintSide();
+  book.GetSide('a')->PrintSide();
 
   return 0;
 }
