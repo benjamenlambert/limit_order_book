@@ -46,6 +46,25 @@ int main() {
         auto *new_level = new PriceLevel(update.id, order);
 
         side->InsertLevel(*new_level);
+
+        if (side->top_of_book_ == nullptr) {
+          std::cout << "Creating top of book on " << (update.side == 'b' ? "bid" : "ask") << " side." << std::endl;
+          side->top_of_book_ = new_level;
+          std::cout << "Top of book on " << (update.side == 'b' ? " bid" : "ask") << " side : "
+                    << side->top_of_book_->GetPrice() << std::endl;
+        } else if (update.side == 'b') {
+          if (new_level->GetPrice() > side->top_of_book_->GetPrice()) {
+            std::cout << "Updating top of book on bid side.  Previous top of book : " << side->top_of_book_->GetPrice()
+                      << std::endl;
+            side->top_of_book_ = new_level;
+            std::cout << "New top of book : " << side->top_of_book_->GetPrice() << std::endl;
+          }
+        } else if (new_level->GetPrice() < side->top_of_book_->GetPrice()) {
+          std::cout << "Updating top of book on ask side.  Previous top of book : " << side->top_of_book_->GetPrice()
+                    << std::endl;
+          side->top_of_book_ = new_level;
+          std::cout << "New top of book : " << side->top_of_book_->GetPrice() << std::endl;
+        }
       }
       adds++;
     } else if (update.action == 'd') {
@@ -83,11 +102,11 @@ int main() {
             << std::endl;
   std::cout << "********************************" << std::endl;
 
-  book.GetSide('b')->PrintSide();
+  //book.GetSide('b')->PrintSide();
 
-  std::cout << "\n****************************************************************\n" << std::endl;
+  //std::cout << "\n****************************************************************\n" << std::endl;
 
-  book.GetSide('a')->PrintSide();
+  //book.GetSide('a')->PrintSide();
 
   return 0;
 }

@@ -12,7 +12,7 @@
 
 class Side {
  public:
-  Side();
+  Side();;
   ~Side();
 
   PriceLevel *InsertLevel(PriceLevel &level);
@@ -24,6 +24,8 @@ class Side {
 
   void PrintSide();
 
+  PriceLevel *top_of_book_;
+
  private:
   PriceLevel *&Find(int price, PriceLevel *&current_level);
   PriceLevel *Min(PriceLevel *current_level);
@@ -33,7 +35,6 @@ class Side {
 
   void Print(PriceLevel *level);
 
-  PriceLevel *top_of_book_;
   PriceLevel *root_;
 };
 
