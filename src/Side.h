@@ -17,14 +17,11 @@ class Side {
 
   PriceLevel *InsertLevel(PriceLevel &level);
   PriceLevel *FindLevel(int price);
-  PriceLevel *FindTop(char side);
   PriceLevel *FindMin();
   PriceLevel *FindMax();
   int RemoveLevel(int price);
 
   void PrintSide();
-
-  PriceLevel *top_of_book_;
 
  private:
   PriceLevel *&Find(int price, PriceLevel *&current_level);
