@@ -15,19 +15,32 @@ class Side {
   Side();;
   ~Side();
 
-  PriceLevel *InsertLevel(PriceLevel &level);
+  void InsertLevel(PriceLevel *level);
   PriceLevel *FindLevel(int price);
   PriceLevel *FindMin();
   PriceLevel *FindMax();
-  int RemoveLevel(int price);
+  void RemoveLevel(int price);
 
   void PrintSide();
 
  private:
-  PriceLevel *&Find(int price, PriceLevel *&current_level);
+  PriceLevel *Insert(PriceLevel *level, PriceLevel *current_level);
+  PriceLevel *Find(int price, PriceLevel *current_level);
+  PriceLevel *Remove(int price, PriceLevel *current_level);
+
+  int GetHeight(PriceLevel *level);
+  void UpdateHeight(PriceLevel *current_level);
+  int GetBalanceFactor(PriceLevel *level);
+  void BalanceTree(PriceLevel *&current_level);
+
+  void RotateLeft(PriceLevel *&current_level);
+  void RotateRight(PriceLevel *&current_level);
+  void RotateRightLeft(PriceLevel *&current_level);
+  void RotateLeftRight(PriceLevel *&current_level);
+
   PriceLevel *Min(PriceLevel *current_level);
   PriceLevel *Max(PriceLevel *current_level);
-  PriceLevel *&Remove(PriceLevel *&current_level);
+
   PriceLevel *DestroySide(PriceLevel *current_level);
 
   void Print(PriceLevel *level);

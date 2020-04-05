@@ -12,12 +12,8 @@ Side::~Side() {
   root_ = DestroySide(root_);
 }
 
-PriceLevel *Side::InsertLevel(PriceLevel &level) {
-  int price = level.GetPrice();
-
-  PriceLevel *&new_node = Find(price, root_);
-  new_node = &level;
-  return new_node;
+void Side::InsertLevel(PriceLevel *level) {
+  root_ = Insert(level, root_);
 }
 
 PriceLevel *Side::FindLevel(int price) {
@@ -32,15 +28,8 @@ PriceLevel *Side::FindMax() {
   return Max(root_);
 }
 
-int Side::RemoveLevel(int key) {
-  PriceLevel *&node = Find(key, root_);
-  if (node != nullptr) {
-    Remove(node);
-    return 1;
-  } else {
-    return 0;
-  }
-
+void Side::RemoveLevel(int key) {
+  root_ = Remove(key, root_);
 }
 
 void Side::PrintSide() {
@@ -49,7 +38,25 @@ void Side::PrintSide() {
 
 //Private
 
-PriceLevel *&Side::Find(int price, PriceLevel *&current_level) {
+PriceLevel *Side::Insert(PriceLevel *level, PriceLevel *current_level) {
+  if (current_level == nullptr) {
+    //current_level = new PriceLevel(level.key_, level.value_);
+    current_level = level;
+  }
+  if (level->GetPrice() < current_level->GetPrice()) {
+    current_level->left_ = Insert(level, current_level->left_);
+  } else if (level->GetPrice() > current_level->GetPrice()) {
+    current_level->right_ = Insert(level, current_level->right_);
+  } else {
+    return current_level;
+  }
+
+  BalanceTree(current_level);
+
+  return current_level;
+}
+
+PriceLevel *Side::Find(int price, PriceLevel *current_level) {
   if (current_level == nullptr) {
     return current_level;
   } else {
@@ -63,6 +70,179 @@ PriceLevel *&Side::Find(int price, PriceLevel *&current_level) {
       return Find(price, current_level->right_);
     }
   }
+}
+
+PriceLevel *Side::Remove(int price, PriceLevel *current_level) {
+  if (current_level == nullptr) {
+    return current_level;
+  }
+
+  if (price < current_level->GetPrice()) {
+    current_level->left_ = Remove(price, current_level->left_);
+  } else if (price > current_level->GetPrice()) {
+    current_level->right_ = Remove(price, current_level->right_);
+  } else {
+    if (current_level->left_ == nullptr) {// One child right and zero child remove
+      current_level = current_level->right_;
+    } else if (current_level->right_ == nullptr) {// One child left remove
+      current_level = current_level->left_;
+    } else { // Two child remove
+      PriceLevel *iop = Max(current_level->left_); // Get in-order predecessor
+      current_level = iop;
+      current_level->left_ = Remove(iop->GetPrice(), current_level->left_);
+    }
+  }
+
+  BalanceTree(current_level);
+
+  return current_level;
+}
+
+int Side::GetHeight(PriceLevel *level) {
+  if (level == nullptr) {
+    return -1;
+  } else {
+    return level->height_;
+  }
+}
+
+void Side::UpdateHeight(PriceLevel *current_level) {
+  if (current_level == nullptr) {
+    return;
+  } else {
+    current_level->height_ = 1 + std::max(GetHeight(current_level->left_), GetHeight(current_level->right_));
+  }
+}
+
+int Side::GetBalanceFactor(PriceLevel *level) {
+  if (level == nullptr) {
+    return 0;
+  } else {
+    return GetHeight(level->right_) - GetHeight(level->left_);
+  }
+}
+
+void Side::BalanceTree(PriceLevel *&current_level) {
+  if (current_level == nullptr) {
+    return;
+  }
+
+  int balance_factor = GetBalanceFactor(current_level);
+
+  // Error checking
+  if (balance_factor < -2 || balance_factor > 2) {
+    std::string msg("ERROR: Detected invalid initial balance factor: ");
+    msg += std::to_string(balance_factor);
+    std::cerr << "price: " << current_level->GetPrice() << std::endl;
+    std::cerr << "current_node left price: " << current_level->left_->GetPrice() << " current_node right price: "
+              << current_level->right_->GetPrice() << std::endl;
+    std::cerr << "current_node left height: " << GetHeight(current_level->left_) << " current_node right height: "
+              << GetHeight(current_level->right_) << std::endl;
+    throw std::runtime_error(msg);
+  }
+
+  if (balance_factor == 2) {
+    int right_balance_factor = GetBalanceFactor(current_level->right_);
+
+    if (right_balance_factor == -1) {
+      std::cout << "Right left rotation" << std::endl;
+      RotateRightLeft(current_level);
+    } else if (right_balance_factor == 1
+        || right_balance_factor == 0) // Can change to else once satisfied and after removing error checking below
+    {
+      std::cout << "Left rotation" << std::endl;
+      RotateLeft(current_level);
+    } else {
+      // Error checking
+      std::string msg("ERROR: right_balance_factor has unexpected value: ");
+      msg += std::to_string(right_balance_factor);
+      throw std::runtime_error(msg);
+    }
+  } else if (balance_factor == -2) {
+    int left_balance_factor = GetBalanceFactor(current_level->left_);
+
+    if (left_balance_factor == 1) {
+      std::cout << "Left right rotation" << std::endl;
+      RotateLeftRight(current_level);
+    } else if (left_balance_factor == -1
+        || left_balance_factor == 0) // Can change to else once satisfied and after removing error checking below
+    {
+      std::cout << "Right rotation" << std::endl;
+      RotateRight(current_level);
+    } else {
+      // Error checking
+      std::string msg("ERROR: left_balance_factor has unexpected value: ");
+      msg += std::to_string(left_balance_factor);
+      throw std::runtime_error(msg);
+    }
+  }
+
+  UpdateHeight(current_level);
+  // Final error check
+  balance_factor = GetBalanceFactor(current_level);
+  if (balance_factor < -1 || balance_factor > 1) {
+    std::string msg("ERROR: Invalid balance factor after BalanceTree: ");
+    msg += std::to_string(balance_factor);
+    throw std::runtime_error(msg);
+  }
+}
+
+void Side::RotateLeft(PriceLevel *&current_level) {
+  if (current_level == nullptr) {
+    throw std::runtime_error("ERROR: RotateLeft called on nullptr");
+  }
+  if (current_level->right_ == nullptr) {
+    throw std::runtime_error("ERROR: RotateLeft: right child is nullptr");
+  }
+
+  PriceLevel *subtree_root = current_level;
+  PriceLevel *subtree_root_right = current_level->right_;
+  PriceLevel *subtree_root_right_left = current_level->right_->left_;
+
+  subtree_root->right_ = subtree_root_right_left;
+  subtree_root_right->left_ = subtree_root;
+  current_level = subtree_root_right;
+
+  UpdateHeight(subtree_root);
+  UpdateHeight(subtree_root_right);
+}
+
+void Side::RotateRight(PriceLevel *&current_level) {
+  if (current_level == nullptr) {
+    throw std::runtime_error("ERROR: RotateRight called on nullptr");
+  }
+  if (current_level->left_ == nullptr) {
+    throw std::runtime_error("ERROR: RotateRight: left child is nullptr");
+  }
+
+  PriceLevel *subtree_root = current_level;
+  PriceLevel *subtree_root_left = current_level->left_;
+  PriceLevel *subtree_root_left_right = current_level->left_->right_;
+
+  subtree_root->left_ = subtree_root_left_right;
+  subtree_root_left->right_ = subtree_root;
+  current_level = subtree_root_left;
+
+  UpdateHeight(subtree_root);
+  UpdateHeight(subtree_root_left);
+}
+
+void Side::RotateRightLeft(PriceLevel *&current_level) {
+  if (current_level == nullptr) {
+    throw std::runtime_error("ERROR: RotateRightLeft called on nullptr");
+  }
+
+  RotateRight(current_level->right_);
+  RotateLeft(current_level);
+}
+
+void Side::RotateLeftRight(PriceLevel *&current_level) {
+  if (current_level == nullptr) {
+    throw std::runtime_error("ERROR: RotateLeftRight called on nullptr");
+  }
+
+  RotateLeft(current_level->left_);
+  RotateRight(current_level);
 }
 
 PriceLevel *Side::Min(PriceLevel *current_level) {
@@ -84,7 +264,7 @@ PriceLevel *Side::Max(PriceLevel *current_level) {
   else
     return Max(current_level->right_);
 }
-
+/*
 PriceLevel *&Side::Remove(PriceLevel *&level) {
   if (level->left_ == nullptr) {// One child right and zero child remove
     level = level->right_;
@@ -97,6 +277,7 @@ PriceLevel *&Side::Remove(PriceLevel *&level) {
   }
   return level;
 }
+ */
 
 PriceLevel *Side::DestroySide(PriceLevel *current_level) {
   if (current_level == nullptr) {

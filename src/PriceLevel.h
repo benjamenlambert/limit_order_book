@@ -13,7 +13,6 @@
 // Represented as a price and an unordered map containing orders at that price
 class PriceLevel {
  public:
-  PriceLevel();
   PriceLevel(int order_id, const Order &order);
 
   const Order &AddOrder(int order_id, const Order &order);
@@ -24,6 +23,8 @@ class PriceLevel {
   const std::unordered_map<int, Order> &GetOrders();
   int GetSize();
   int GetPrice();
+
+  int height_;
 
   PriceLevel *left_;
   PriceLevel *right_;

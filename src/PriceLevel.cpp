@@ -6,13 +6,10 @@
 #include "Order.h"
 #include "OrderUpdate.h"
 
-PriceLevel::PriceLevel() {
-
-}
-
 PriceLevel::PriceLevel(int order_id, const Order &order) {
   size_ = 0;
   price_ = order.GetPrice();
+  height_ = 0;
 
   left_ = nullptr;
   right_ = nullptr;
@@ -31,7 +28,6 @@ const Order &PriceLevel::ModifyOrder(const OrderUpdate &update) {
   int id = update.id;
   int prev_qty = orders_.at(id).GetQty();
   int qty = orders_.at(id).UpdateQty(update.qty);
-  int price = orders_.at(id).UpdatePrice(update.price);
   size_ += qty - prev_qty;
   return orders_.at(id);
 }
