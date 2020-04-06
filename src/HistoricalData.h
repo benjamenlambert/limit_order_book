@@ -17,7 +17,7 @@ class HistoricalData : public MarketData {
 
   // Reads a .csv file containing raw order updates line by line into memory as a vector of vectors.
   // Accepts the filename of the .csv file as a string as the sole required argument.
-  // Optionally accepts hasColHeaders as a boolean. Default value is false.  If true, the first line containing
+  // Optionally accepts has_col_headers as a boolean. Default value is false.  If true, the first line containing
   // header/column names will be ignored.
   std::vector<std::vector<std::string>> ReadCSV(const std::string &file_name, bool has_col_headers = false);
 };

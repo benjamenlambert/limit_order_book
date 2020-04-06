@@ -7,7 +7,7 @@
 
 #include "Message.h"
 
-// Contains the information contained in an order update.
+// Structure containing the information in an order update.
 struct OrderUpdate : public Message {
   unsigned long long int timestamp; // Microseconds since the market open.
   char side;

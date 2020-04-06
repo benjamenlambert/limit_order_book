@@ -33,7 +33,7 @@ void Side::RemoveLevel(int key) {
 }
 
 void Side::PrintSide() {
-  Print(root_);
+  ReverseOrder(root_);
 }
 
 //Private
@@ -145,12 +145,12 @@ void Side::BalanceTree(PriceLevel *&current_level) {
     int right_balance_factor = GetBalanceFactor(current_level->right_);
 
     if (right_balance_factor == -1) {
-      std::cout << "Right left rotation" << std::endl;
+      //std::cout << "Right left rotation" << std::endl;
       RotateRightLeft(current_level);
     } else if (right_balance_factor == 1
         || right_balance_factor == 0) // Can change to else once satisfied and after removing error checking below
     {
-      std::cout << "Left rotation" << std::endl;
+      //std::cout << "Left rotation" << std::endl;
       RotateLeft(current_level);
     } else {
       // Error checking
@@ -162,12 +162,12 @@ void Side::BalanceTree(PriceLevel *&current_level) {
     int left_balance_factor = GetBalanceFactor(current_level->left_);
 
     if (left_balance_factor == 1) {
-      std::cout << "Left right rotation" << std::endl;
+      //std::cout << "Left right rotation" << std::endl;
       RotateLeftRight(current_level);
     } else if (left_balance_factor == -1
         || left_balance_factor == 0) // Can change to else once satisfied and after removing error checking below
     {
-      std::cout << "Right rotation" << std::endl;
+      //std::cout << "Right rotation" << std::endl;
       RotateRight(current_level);
     } else {
       // Error checking
@@ -292,16 +292,26 @@ PriceLevel *Side::DestroySide(PriceLevel *current_level) {
   return nullptr;
 }
 
-void Side::Print(PriceLevel *level) {
-
+void Side::InOrder(PriceLevel *level) {
   if (level != nullptr) {
-    Print(level->left_);
+    InOrder(level->left_);
     std::cout << "Price Level : " << level->GetPrice() << std::endl;
     std::cout << "\tSize : " << level->GetSize() << " Num orders : " << level->NumOrders() << std::endl;
     for (auto &iter: level->GetOrders()) {
       std::cout << "\t\tid: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
     }
-    Print(level->right_);
+    InOrder(level->right_);
   }
+}
 
+void Side::ReverseOrder(PriceLevel *level) {
+  if (level != nullptr) {
+    ReverseOrder(level->right_);
+    std::cout << "Price Level : " << level->GetPrice() << std::endl;
+    std::cout << "\tSize : " << level->GetSize() << " Num orders : " << level->NumOrders() << std::endl;
+    for (auto &iter: level->GetOrders()) {
+      std::cout << "\t\tid: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
+    }
+    ReverseOrder(level->left_);
+  }
 }

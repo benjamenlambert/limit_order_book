@@ -6,6 +6,7 @@
 
 Order::Order(const OrderUpdate &update) {
   timestamp_ = update.timestamp;
+  //id_ = update.id;
   side_ = update.side;
   price_ = update.price;
   qty_ = update.qty;
@@ -21,11 +22,6 @@ int Order::GetPrice() const {
 
 int Order::GetQty() const {
   return qty_;
-}
-
-int Order::UpdatePrice(int price) {
-  price_ = price;
-  return price_;
 }
 
 int Order::UpdateQty(int qty) {

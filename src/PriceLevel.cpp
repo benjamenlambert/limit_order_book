@@ -7,6 +7,7 @@
 #include "OrderUpdate.h"
 
 PriceLevel::PriceLevel(int order_id, const Order &order) {
+  // Create the new PriceLevel
   size_ = 0;
   price_ = order.GetPrice();
   height_ = 0;
@@ -14,7 +15,7 @@ PriceLevel::PriceLevel(int order_id, const Order &order) {
   left_ = nullptr;
   right_ = nullptr;
 
-  AddOrder(order_id, order);
+  AddOrder(order_id, order); // Add the order to the new PriceLevel
 }
 
 const Order &PriceLevel::AddOrder(int order_id, const Order &order) {

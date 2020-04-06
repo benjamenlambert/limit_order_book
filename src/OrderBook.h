@@ -7,6 +7,7 @@
 
 #include "Side.h"
 
+// The order book containing both sides (bid and ask) of the book.
 class OrderBook {
  public:
   Side *GetSide(char side);
