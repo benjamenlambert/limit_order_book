@@ -40,7 +40,6 @@ void Side::PrintSide() {
 
 PriceLevel *Side::Insert(PriceLevel *level, PriceLevel *current_level) {
   if (current_level == nullptr) {
-    //current_level = new PriceLevel(level.key_, level.value_);
     current_level = level;
   }
   if (level->GetPrice() < current_level->GetPrice()) {
@@ -51,7 +50,7 @@ PriceLevel *Side::Insert(PriceLevel *level, PriceLevel *current_level) {
     return current_level;
   }
 
-  BalanceTree(current_level);
+  BalanceTree(current_level); // Ensure AVL tree balance after insertion
 
   return current_level;
 }
@@ -76,12 +75,11 @@ PriceLevel *Side::Remove(int price, PriceLevel *current_level) {
   if (current_level == nullptr) {
     return current_level;
   }
-
   if (price < current_level->GetPrice()) {
     current_level->left_ = Remove(price, current_level->left_);
   } else if (price > current_level->GetPrice()) {
     current_level->right_ = Remove(price, current_level->right_);
-  } else {
+  } else { // Found PriceLevel to remove
     if (current_level->left_ == nullptr) {// One child right and zero child remove
       current_level = current_level->right_;
     } else if (current_level->right_ == nullptr) {// One child left remove
@@ -93,7 +91,7 @@ PriceLevel *Side::Remove(int price, PriceLevel *current_level) {
     }
   }
 
-  BalanceTree(current_level);
+  BalanceTree(current_level); // Ensure AVL tree balance after removal
 
   return current_level;
 }
@@ -178,6 +176,7 @@ void Side::BalanceTree(PriceLevel *&current_level) {
   }
 
   UpdateHeight(current_level);
+
   // Final error check
   balance_factor = GetBalanceFactor(current_level);
   if (balance_factor < -1 || balance_factor > 1) {
@@ -264,25 +263,10 @@ PriceLevel *Side::Max(PriceLevel *current_level) {
   else
     return Max(current_level->right_);
 }
-/*
-PriceLevel *&Side::Remove(PriceLevel *&level) {
-  if (level->left_ == nullptr) {// One child right and zero child remove
-    level = level->right_;
-  } else if (level->right_ == nullptr) {// One child left remove
-    level = level->left_;
-  } else { // Two child remove
-    PriceLevel *iop = Max(level->left_); // Get in-order predecessor
-    level = iop;
-    level->left_ = Remove(level->left_);
-  }
-  return level;
-}
- */
 
 PriceLevel *Side::DestroySide(PriceLevel *current_level) {
   if (current_level == nullptr) {
     return nullptr;
-    //throw std::runtime_error("Side empty");
   } else {
     DestroySide(current_level->left_);
     DestroySide(current_level->right_);

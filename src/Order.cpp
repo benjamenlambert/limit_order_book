@@ -24,7 +24,6 @@ int Order::GetQty() const {
   return qty_;
 }
 
-int Order::UpdateQty(int qty) {
+void Order::UpdateQty(int qty) {
   qty_ = qty;
-  return qty_;
 }

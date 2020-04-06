@@ -19,8 +19,8 @@ class Order {
   [[nodiscard]] int GetPrice() const;
   [[nodiscard]] int GetQty() const;
 
-  // Updates the order quantity in the event of a modify order message
-  int UpdateQty(int qty);
+  // Updates the order quantity in the event of a modify order message.
+  void UpdateQty(int qty);
 
  private:
   unsigned long long int timestamp_; // Microseconds since the market open.

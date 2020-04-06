@@ -6,37 +6,29 @@
 #include "Order.h"
 #include "OrderUpdate.h"
 
-PriceLevel::PriceLevel(int order_id, const Order &order) {
-  // Create the new PriceLevel
+PriceLevel::PriceLevel(int price) {
   size_ = 0;
-  price_ = order.GetPrice();
+  price_ = price;
   height_ = 0;
 
   left_ = nullptr;
   right_ = nullptr;
-
-  AddOrder(order_id, order); // Add the order to the new PriceLevel
 }
 
-const Order &PriceLevel::AddOrder(int order_id, const Order &order) {
-  int id = order_id;
-  orders_.insert(std::make_pair(id, order));
-  size_ += orders_.at(id).GetQty();
-  return orders_.at(id);
+void PriceLevel::AddOrder(int order_id, const Order &order) {
+  orders_.insert(std::make_pair(order_id, order));
+  size_ += orders_.at(order_id).GetQty(); // Update the PriceLevel size_ to reflect addition of new order
 }
 
-const Order &PriceLevel::ModifyOrder(const OrderUpdate &update) {
-  int id = update.id;
-  int prev_qty = orders_.at(id).GetQty();
-  int qty = orders_.at(id).UpdateQty(update.qty);
-  size_ += qty - prev_qty;
-  return orders_.at(id);
+void PriceLevel::ModifyOrder(const OrderUpdate &update) {
+  int prev_qty = orders_.at(update.id).GetQty(); // Get previous quantity
+  orders_.at(update.id).UpdateQty(update.qty); // Update quantity
+  size_ += orders_.at(update.id).GetQty() - prev_qty; // Update the PriceLevel size_ to reflect change in order qty
 }
 
-int PriceLevel::RemoveOrder(int order_id) {
-  int id = order_id;
-  size_ -= orders_.at(id).GetQty();
-  return orders_.erase(id);
+void PriceLevel::RemoveOrder(int order_id) {
+  size_ -= orders_.at(order_id).GetQty(); // Update the PriceLevel size_ to reflect removal of order
+  orders_.erase(order_id); // Remove the order
 }
 
 const Order &PriceLevel::GetOrder(int id) {

@@ -14,14 +14,12 @@
 // containing all price levels on a given side (bid/ask).
 class PriceLevel {
  public:
-  // Creates a new PriceLevel and adds an Order to the hash table with order id as the key.
-  // TODO Should I separate the constructor from AddLevel in it?
-  PriceLevel(int order_id, const Order &order);
+  explicit PriceLevel(int price);
 
-  //  Adds an Order to an existing PriceLevel
-  const Order &AddOrder(int order_id, const Order &order); // TODO Do these need to return the order?
-  const Order &ModifyOrder(const OrderUpdate &update); // TODO Or should they just be void?
-  int RemoveOrder(int order_id); // TODO Should this just be void?
+  //  Adds an Order to the hash table with order id as the key.
+  void AddOrder(int order_id, const Order &order);
+  void ModifyOrder(const OrderUpdate &update);
+  void RemoveOrder(int order_id);
 
   const Order &GetOrder(int id);
   // Gets all orders at the PriceLevel

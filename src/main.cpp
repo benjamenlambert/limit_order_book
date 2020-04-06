@@ -41,8 +41,9 @@ int main() {
 
       if (level != nullptr) { // If it exists, add the order
         level->AddOrder(update.id, order);
-      } else { // Create the level and add it to the side
-        auto *new_level = new PriceLevel(update.id, order);
+      } else { // Create the level, add the order, and add it to the side
+        auto *new_level = new PriceLevel(order.GetPrice());
+        new_level->AddOrder(update.id, order);
 
         side->InsertLevel(new_level);
       }

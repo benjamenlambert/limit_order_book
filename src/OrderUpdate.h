@@ -12,7 +12,7 @@ struct OrderUpdate : public Message {
   unsigned long long int timestamp; // Microseconds since the market open.
   char side;
   char action;
-  int id; // Can handle up to approx. 2.1 billion unique ids.
+  int id;
   int price;
   int qty;
 

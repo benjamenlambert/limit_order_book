@@ -18,15 +18,16 @@ class Side {
   Side();
   ~Side();
 
+  // Wrapper functions
   void InsertLevel(PriceLevel *level);
   PriceLevel *FindLevel(int price);
   void RemoveLevel(int price);
 
-  // Returns the minimum PriceLevel on the Side
+  // Find wrapper functions
   PriceLevel *FindMin();
-  // Returns the maximum PriceLevel on the Side
   PriceLevel *FindMax();
 
+  // Print wrapper function
   void PrintSide();
 
  private:
@@ -34,10 +35,12 @@ class Side {
   PriceLevel *Find(int price, PriceLevel *current_level);
   PriceLevel *Remove(int price, PriceLevel *current_level);
 
+  // Returns the minimum PriceLevel on the Side
   PriceLevel *Min(PriceLevel *current_level);
+  // Returns the maximum PriceLevel on the Side
   PriceLevel *Max(PriceLevel *current_level);
 
-  // Ensures balance in the AVL tree after every insertion/deletion
+  // Ensures balance in the AVL tree
   void BalanceTree(PriceLevel *&current_level);
 
   // Restore balance in the AVL tree
@@ -51,8 +54,10 @@ class Side {
   void UpdateHeight(PriceLevel *current_level);
   int GetBalanceFactor(PriceLevel *level);
 
+  // Memory cleanup
   PriceLevel *DestroySide(PriceLevel *current_level);
 
+  // Print functions
   void InOrder(PriceLevel *level);
   void ReverseOrder(PriceLevel *level);
 
