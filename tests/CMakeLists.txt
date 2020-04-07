@@ -1,0 +1,2 @@
+add_executable(limit_order_book_tests OrderUpdateTests.cpp)
+target_link_libraries(limit_order_book_tests src)
