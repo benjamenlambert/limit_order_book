@@ -6,15 +6,6 @@
 #include "Order.h"
 #include "OrderUpdate.h"
 
-PriceLevel::PriceLevel(int price) {
-  size_ = 0;
-  price_ = price;
-  height_ = 0;
-
-  left_ = nullptr;
-  right_ = nullptr;
-}
-
 void PriceLevel::AddOrder(int order_id, const Order &order) {
   orders_.insert(std::make_pair(order_id, order));
   size_ += orders_.at(order_id).GetQty(); // Update the PriceLevel size_ to reflect addition of new order

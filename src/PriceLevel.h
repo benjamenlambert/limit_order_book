@@ -14,7 +14,8 @@
 // containing all price levels on a given side (bid/ask).
 class PriceLevel {
  public:
-  explicit PriceLevel(int price);
+  explicit PriceLevel(int price) : size_(0), price_(price), height_(0), left_(nullptr), right_(nullptr) {
+  }
 
   //  Adds an Order to the hash table with order id as the key.
   void AddOrder(int order_id, const Order &order);

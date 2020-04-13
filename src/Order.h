@@ -13,7 +13,9 @@
 class Order {
  public:
   // Creates a new Order from an OrderUpdate
-  explicit Order(const OrderUpdate &update);
+  explicit Order(const OrderUpdate &update)
+      : timestamp_(update.timestamp), side_(update.side), price_(update.price), qty_(update.qty) {
+  }
 
   [[nodiscard]] char GetSide() const;
   [[nodiscard]] int GetPrice() const;

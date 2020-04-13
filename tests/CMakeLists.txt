@@ -1,2 +1,2 @@
-add_executable(limit_order_book_tests OrderUpdateTests.cpp)
+add_executable(limit_order_book_tests OrderTests.cpp PriceLevelTests.cpp SideTests.cpp)
 target_link_libraries(limit_order_book_tests src)

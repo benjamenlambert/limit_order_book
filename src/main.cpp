@@ -6,14 +6,14 @@
 
 int main() {
 
-  HistoricalData data;
+  std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/res_20190614.csv", true);
 
   //data.ReadCSV("../data/hash_data.csv"); // Partial file
   //std::vector<std::vector<std::string>>
   //    csv = data.ReadCSV("../data/data_9990.csv", true); // Partial file with headers
   //std::vector<std::vector<std::string>>
   //    csv = data.ReadCSV("../data/res_20190612_bids.csv", true); // Partial file with headers
-  std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190614.csv", true); // Full file
+  //std::vector<std::vector<std::string>> csv = data.ReadCSV("../data/res_20190614.csv", true); // Full file
 
   int num_rows = csv.size();
 
@@ -45,7 +45,7 @@ int main() {
         auto *new_level = new PriceLevel(order.GetPrice());
         new_level->AddOrder(update.id, order);
 
-        side->InsertLevel(new_level);
+        side->AddLevel(new_level);
       }
       adds++;
     } else if (update.action == 'd') {

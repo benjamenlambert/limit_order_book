@@ -19,7 +19,7 @@ class HistoricalData : public MarketData {
   // Accepts the filename of the .csv file as a string as the sole required argument.
   // Optionally accepts has_col_headers as a boolean. Default value is false.  If true, the first line containing
   // header/column names will be ignored.
-  std::vector<std::vector<std::string>> ReadCSV(const std::string &file_name, bool has_col_headers = false);
+  static std::vector<std::vector<std::string>> ReadCSV(const std::string &file_name, bool has_col_headers = false);
 };
 
 #endif //LIMIT_ORDER_BOOK_SRC_HISTORICALDATA_H_

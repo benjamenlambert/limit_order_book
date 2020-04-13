@@ -15,11 +15,12 @@
 // opposing Side.
 class Side {
  public:
-  Side();
+  Side() : root_(nullptr) {
+  }
   ~Side();
 
   // Wrapper functions
-  void InsertLevel(PriceLevel *level);
+  void AddLevel(PriceLevel *level);
   PriceLevel *FindLevel(int price);
   void RemoveLevel(int price);
 
@@ -27,11 +28,14 @@ class Side {
   PriceLevel *FindMin();
   PriceLevel *FindMax();
 
-  // Print wrapper function
+  // Print wrapper functions
   void PrintSide();
+  // Print wrapper functions for testing
+  void ToStringInOrder(std::string &str);
+  void ToStringPreOrder(std::string &str);
 
  private:
-  PriceLevel *Insert(PriceLevel *level, PriceLevel *current_level);
+  PriceLevel *Add(PriceLevel *level, PriceLevel *current_level);
   PriceLevel *Find(int price, PriceLevel *current_level);
   PriceLevel *Remove(int price, PriceLevel *current_level);
 
@@ -60,6 +64,9 @@ class Side {
   // Print functions
   void InOrder(PriceLevel *level);
   void ReverseOrder(PriceLevel *level);
+  // Print functions for testing
+  void ToStringInOrder(PriceLevel *level, std::string &str);
+  void ToStringPreOrder(PriceLevel *level, std::string &str);
 
   PriceLevel *root_;
 };

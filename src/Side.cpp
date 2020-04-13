@@ -4,16 +4,12 @@
 
 #include "Side.h"
 
-Side::Side() {
-  root_ = nullptr;
-}
-
 Side::~Side() {
   root_ = DestroySide(root_);
 }
 
-void Side::InsertLevel(PriceLevel *level) {
-  root_ = Insert(level, root_);
+void Side::AddLevel(PriceLevel *level) {
+  root_ = Add(level, root_);
 }
 
 PriceLevel *Side::FindLevel(int price) {
@@ -36,16 +32,25 @@ void Side::PrintSide() {
   ReverseOrder(root_);
 }
 
+void Side::ToStringInOrder(std::string &str) {
+  ToStringInOrder(root_, str);
+}
+
+void Side::ToStringPreOrder(std::string &str) {
+  ToStringPreOrder(root_, str);
+}
+
 //Private
 
-PriceLevel *Side::Insert(PriceLevel *level, PriceLevel *current_level) {
+PriceLevel *Side::Add(PriceLevel *level, PriceLevel *current_level) {
   if (current_level == nullptr) {
     current_level = level;
   }
+
   if (level->GetPrice() < current_level->GetPrice()) {
-    current_level->left_ = Insert(level, current_level->left_);
+    current_level->left_ = Add(level, current_level->left_);
   } else if (level->GetPrice() > current_level->GetPrice()) {
-    current_level->right_ = Insert(level, current_level->right_);
+    current_level->right_ = Add(level, current_level->right_);
   } else {
     return current_level;
   }
@@ -299,3 +304,35 @@ void Side::ReverseOrder(PriceLevel *level) {
     ReverseOrder(level->left_);
   }
 }
+
+void Side::ToStringInOrder(PriceLevel *level, std::string &str) {
+  if (level == nullptr) {
+    return;
+  }
+
+  ToStringInOrder(level->left_, str);
+  str += (std::to_string(level->GetPrice()) + ' ');
+
+  if (level->left_ == nullptr && level->right_ == nullptr) {
+    return;
+  }
+
+  ToStringInOrder(level->right_, str);
+
+}
+void Side::ToStringPreOrder(PriceLevel *level, std::string &str) {
+  if (level == nullptr) {
+    return;
+  }
+
+  str += (std::to_string(level->GetPrice()) + ' ');
+
+  if (level->left_ == nullptr && level->right_ == nullptr) {
+    return;
+  }
+
+  ToStringPreOrder(level->left_, str);
+  ToStringPreOrder(level->right_, str);
+
+}
+
