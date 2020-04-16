@@ -91,8 +91,21 @@ PriceLevel *Side::Remove(int price, PriceLevel *current_level) {
       current_level = current_level->left_;
     } else { // Two child remove
       PriceLevel *iop = Max(current_level->left_); // Get in-order predecessor
-      current_level = iop;
+      //current_level = iop;
+      current_level->Swap(iop);
       current_level->left_ = Remove(iop->GetPrice(), current_level->left_);
+
+      /*
+      // This works if the PriceLevel members are public and can be directly copied
+      PriceLevel *iop = Max(current_level->left_); // Get in-order predecessor
+      current_level->price_ = iop->price_;
+      current_level->orders_ = iop->orders_;
+      current_level->left_ = Remove(iop->GetPrice(), current_level->left_);
+      // Do I need to create a custom copy constructor?
+      // current_level's pointer are not changing here, only the values of price_ and orders_
+      // Look at ACSF swap and at custom copy constructor for deep copy
+       */
+
     }
   }
 

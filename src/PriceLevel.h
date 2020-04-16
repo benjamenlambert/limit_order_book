@@ -31,6 +31,8 @@ class PriceLevel {
   // Returns the total number of orders at the PriceLevel
   int NumOrders();
 
+  void Swap(PriceLevel *other_level);
+
   // Pointers to the PriceLevel's left and right children in the AVL tree
   PriceLevel *left_;
   PriceLevel *right_;

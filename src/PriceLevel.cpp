@@ -41,3 +41,9 @@ int PriceLevel::GetPrice() {
 int PriceLevel::NumOrders() {
   return orders_.size();
 }
+
+void PriceLevel::Swap(PriceLevel *other_level) {
+  std::swap(price_, other_level->price_);
+  std::swap(orders_, other_level->orders_);
+  std::swap(size_, other_level->size_);
+}

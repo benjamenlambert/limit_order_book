@@ -60,12 +60,8 @@ TEST_CASE ("Get existing order from price level", "[PriceLevelTests]") {
   Order new_order(update);
   level.AddOrder(update.id, new_order);
 
-  // Act
-  Order order = level.GetOrder(update.id);
-  int order_price = order.GetPrice(); // Use GetPrice on order that was retrieved
-
-  // Assert
-  CHECK(order_price == 1);
+  // Act/Assert
+  CHECK_NOTHROW(level.GetOrder(update.id));
 }
 
 TEST_CASE ("Get all existing orders from price level", "[PriceLevelTests]") {
@@ -98,10 +94,10 @@ TEST_CASE ("Get price of price level", "[PriceLevelTests]") {
   PriceLevel level(1);
 
   // Act
-  int price = level.GetPrice();
+  int level_price = level.GetPrice();
 
   // Assert
-  CHECK(price == 1);
+  CHECK(level_price == 1);
 }
 
 TEST_CASE ("Get total size of price level", "[PriceLevelTests]") {
@@ -116,10 +112,10 @@ TEST_CASE ("Get total size of price level", "[PriceLevelTests]") {
   level.AddOrder(update_2.id, new_order_2);
 
   // Act
-  int size = level.GetSize();
+  int level_size = level.GetSize();
 
   // Assert
-  CHECK(size == 2);
+  CHECK(level_size == 2);
 }
 
 TEST_CASE ("Get number of orders at price level", "[PriceLevelTests]") {
