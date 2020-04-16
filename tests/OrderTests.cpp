@@ -7,7 +7,7 @@
 #include "catch.hpp"
 
 #include "Order.h"
-
+/*
 TEST_CASE ("Get side of order", "[OrderTests]") {
   // Arrange
   OrderUpdate update(1, 'b', 'a', 1, 1, 1);
@@ -19,7 +19,7 @@ TEST_CASE ("Get side of order", "[OrderTests]") {
   // Assert
   CHECK(side == 'b');
 }
-
+*/
 TEST_CASE ("Get price of order", "[OrderTests]") {
   // Arrange
   OrderUpdate update(1, 'b', 'a', 1, 1, 1);

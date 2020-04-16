@@ -5,7 +5,7 @@
 #include "OrderBook.h"
 
 int main() {
-/*
+
   std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/res_20190614.csv", true);
 
   //data.ReadCSV("../data/hash_data.csv"); // Partial file
@@ -74,39 +74,11 @@ int main() {
             << std::endl;
   std::cout << "********************************" << std::endl;
 
-  book.GetSide('a')->PrintSide();
+  //book.GetSide('a')->PrintSide();
 
-  std::cout << "\n****************************************************************\n" << std::endl;
+  //std::cout << "\n****************************************************************\n" << std::endl;
 
-  book.GetSide('b')->PrintSide();
-  */
-
-  Side bid;
-
-  auto *level_5 = new PriceLevel(5);
-  bid.AddLevel(level_5);
-  auto *level_2 = new PriceLevel(2);
-  bid.AddLevel(level_2);
-  auto *level_6 = new PriceLevel(6);
-  bid.AddLevel(level_6);
-  auto *level_1 = new PriceLevel(1);
-  bid.AddLevel(level_1);
-  auto *level_4 = new PriceLevel(4);
-  bid.AddLevel(level_4);
-  auto *level_3 = new PriceLevel(3);
-  bid.AddLevel(level_3);
-
-  std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
-  in_order.pop_back(); // Remove trailing space
-  std::cout << in_order << std::endl;
-
-  bid.RemoveLevel(5);
-
-  in_order.clear();
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
-  in_order.pop_back(); // Remove trailing space
-  std::cout << in_order << std::endl;
+  //book.GetSide('b')->PrintSide();
 
   return 0;
 }

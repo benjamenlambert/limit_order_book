@@ -33,7 +33,7 @@ TEST_CASE ("Find price level on side", "[SideTests]") {
   //Assert
   CHECK(level != nullptr);
 }
-/*
+
 TEST_CASE ("Find maximum price on side", "[SideTests]") {
   //Arrange
   Side bid;
@@ -48,8 +48,7 @@ TEST_CASE ("Find maximum price on side", "[SideTests]") {
   //Assert
   CHECK(max == 2);
 }
- */
-/*
+
 TEST_CASE ("Find minimum price on side", "[SideTests]") {
   //Arrange
   Side bid;
@@ -64,7 +63,7 @@ TEST_CASE ("Find minimum price on side", "[SideTests]") {
   //Assert
   CHECK(min == 1);
 }
-*/
+
 TEST_CASE ("Print side in order", "[SideTests]") {
   // Arrange
   Side bid;
@@ -206,4 +205,169 @@ TEST_CASE ("Remove root price level w/o IOP from side", "[SideTests]") {
   bid.ToStringInOrder(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "2");
+}
+
+TEST_CASE ("Left rotation after insert", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+  auto *level_2 = new PriceLevel(2);
+  bid.AddLevel(level_2);
+  auto *level_3 = new PriceLevel(3);
+
+  // Act
+  bid.AddLevel(level_3);
+
+  // Assert
+  std::string pre_order;
+  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  pre_order.pop_back(); // Remove trailing space
+  CHECK(pre_order == "2 1 3");
+}
+
+TEST_CASE ("Left rotation after remove", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_2 = new PriceLevel(2);
+  bid.AddLevel(level_2);
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+  auto *level_3 = new PriceLevel(3);
+  bid.AddLevel(level_3);
+  auto *level_4 = new PriceLevel(4);
+  bid.AddLevel(level_4);
+
+  // Act
+  bid.RemoveLevel(1);
+
+  // Assert
+  std::string pre_order;
+  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  pre_order.pop_back(); // Remove trailing space
+  CHECK(pre_order == "3 2 4");
+}
+
+TEST_CASE ("Right rotation after insert", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_3 = new PriceLevel(3);
+  bid.AddLevel(level_3);
+  auto *level_2 = new PriceLevel(2);
+  bid.AddLevel(level_2);
+  auto *level_1 = new PriceLevel(1);
+
+  // Act
+  bid.AddLevel(level_1);
+
+  // Assert
+  std::string pre_order;
+  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  pre_order.pop_back(); // Remove trailing space
+  CHECK(pre_order == "2 1 3");
+}
+
+TEST_CASE ("Right rotation after remove", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_3 = new PriceLevel(3);
+  bid.AddLevel(level_3);
+  auto *level_4 = new PriceLevel(4);
+  bid.AddLevel(level_4);
+  auto *level_2 = new PriceLevel(2);
+  bid.AddLevel(level_2);
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+
+  // Act
+  bid.RemoveLevel(4);
+
+  // Assert
+  std::string pre_order;
+  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  pre_order.pop_back(); // Remove trailing space
+  CHECK(pre_order == "2 1 3");
+}
+
+TEST_CASE ("LeftRight rotation after insert", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_3 = new PriceLevel(3);
+  bid.AddLevel(level_3);
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+  auto *level_2 = new PriceLevel(2);
+
+  // Act
+  bid.AddLevel(level_2);
+
+  // Assert
+  std::string pre_order;
+  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  pre_order.pop_back(); // Remove trailing space
+  CHECK(pre_order == "2 1 3");
+}
+
+TEST_CASE ("LeftRight rotation after remove", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_3 = new PriceLevel(3);
+  bid.AddLevel(level_3);
+  auto *level_4 = new PriceLevel(4);
+  bid.AddLevel(level_4);
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+  auto *level_2 = new PriceLevel(2);
+  bid.AddLevel(level_2);
+
+
+  // Act
+  bid.RemoveLevel(4);
+
+  // Assert
+  std::string pre_order;
+  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  pre_order.pop_back(); // Remove trailing space
+  CHECK(pre_order == "2 1 3");
+}
+
+TEST_CASE ("RightLeft rotation after insert", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+  auto *level_3 = new PriceLevel(3);
+  bid.AddLevel(level_3);
+  auto *level_2 = new PriceLevel(2);
+
+  // Act
+  bid.AddLevel(level_2);
+
+  // Assert
+  std::string pre_order;
+  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  pre_order.pop_back(); // Remove trailing space
+  CHECK(pre_order == "2 1 3");
+}
+
+TEST_CASE ("RightLeft rotation after remove", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_2 = new PriceLevel(2);
+  bid.AddLevel(level_2);
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+  auto *level_4 = new PriceLevel(4);
+  bid.AddLevel(level_4);
+  auto *level_3 = new PriceLevel(3);
+  bid.AddLevel(level_3);
+
+  // Act
+  bid.RemoveLevel(1);
+
+  // Assert
+  std::string pre_order;
+  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  pre_order.pop_back(); // Remove trailing space
+  CHECK(pre_order == "3 2 4");
 }

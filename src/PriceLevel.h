@@ -30,7 +30,8 @@ class PriceLevel {
   int GetPrice();
   // Returns the total number of orders at the PriceLevel
   int NumOrders();
-
+  // Swaps the price, size, and order hast table of two price levels while keeping pointers intact.  Used to swap
+  // price level with IOP in the case of a two child remove
   void Swap(PriceLevel *other_level);
 
   // Pointers to the PriceLevel's left and right children in the AVL tree
