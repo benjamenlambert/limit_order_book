@@ -5,8 +5,7 @@
 #include "OrderBook.h"
 
 int main() {
-
-  std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/res_20190614.csv", true);
+  std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/res_20190612.csv", true);
 
   //data.ReadCSV("../data/hash_data.csv"); // Partial file
   //std::vector<std::vector<std::string>>

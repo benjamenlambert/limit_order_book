@@ -42,8 +42,9 @@ int PriceLevel::NumOrders() {
   return orders_.size();
 }
 
-void PriceLevel::Swap(PriceLevel *other_level) {
-  std::swap(price_, other_level->price_);
-  std::swap(orders_, other_level->orders_);
-  std::swap(size_, other_level->size_);
+void PriceLevel::CopyIOP(PriceLevel *iop) {
+  price_ = iop->price_;
+  orders_ = iop->orders_;
+  size_ = iop->size_;
+  //std::cout << "Copy IOP" << std::endl;
 }

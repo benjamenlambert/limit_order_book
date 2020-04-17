@@ -87,11 +87,13 @@ PriceLevel *Side::Remove(int price, PriceLevel *current_level) {
   } else { // Found PriceLevel to remove
     if (current_level->left_ == nullptr) {// One child right and zero child remove
       current_level = current_level->right_;
+      //std::cout << "One child right or zero child remove" << std::endl;
     } else if (current_level->right_ == nullptr) {// One child left remove
       current_level = current_level->left_;
+      //std::cout << "One child left remove" << std::endl;
     } else { // Two child remove
       PriceLevel *iop = Max(current_level->left_); // Get in-order predecessor
-      current_level->Swap(iop);
+      current_level->CopyIOP(iop);
       current_level->left_ = Remove(iop->GetPrice(), current_level->left_);
     }
   }
