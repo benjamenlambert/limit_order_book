@@ -192,7 +192,7 @@ TEST_CASE ("Remove price level with two children from side", "[SideTests]") {
   CHECK(in_order == "1 2 3 4 6");
 }
 
-TEST_CASE ("Remove root price level w/ IOP from side", "[SideTests]") {
+TEST_CASE ("Remove root price level w/ IOP (two children) from side", "[SideTests]") {
   // Arrange
   Side bid;
   auto *level_2 = new PriceLevel(2);
@@ -212,6 +212,24 @@ TEST_CASE ("Remove root price level w/ IOP from side", "[SideTests]") {
   CHECK(in_order == "1 3");
 }
 
+TEST_CASE ("Remove root price level w/ IOP (one child) from side", "[SideTests]") {
+  // Arrange
+  Side bid;
+  auto *level_2 = new PriceLevel(2);
+  bid.AddLevel(level_2);
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+
+  // Act
+  bid.RemoveLevel(2);
+
+  // Assert
+  std::string in_order;
+  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  in_order.pop_back(); // Remove trailing space
+  CHECK(in_order == "1");
+}
+
 TEST_CASE ("Remove root price level w/o IOP from side", "[SideTests]") {
   // Arrange
   Side bid;
@@ -228,6 +246,74 @@ TEST_CASE ("Remove root price level w/o IOP from side", "[SideTests]") {
   bid.ToStringInOrder(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "2");
+}
+
+TEST_CASE ("Confirm price level has correct orders after CopyIOP", "[SideTests]") {
+  // Arrange
+  Side bid;
+
+  OrderUpdate update_2(1, 'b', 'a', 1, 2, 1);
+  Order order_2(update_2);
+  auto *level_2 = new PriceLevel(2);
+  level_2->AddOrder(update_2.id, order_2);
+  bid.AddLevel(level_2);
+
+  OrderUpdate update_1(2, 'b', 'a', 2, 1, 1);
+  Order order_1(update_1);
+  auto *level_1 = new PriceLevel(1);
+  level_1->AddOrder(update_1.id, order_1);
+  bid.AddLevel(level_1);
+
+  OrderUpdate update_3(3, 'b', 'a', 3, 3, 1);
+  Order order_3(update_3);
+  auto *level_3 = new PriceLevel(3);
+  level_3->AddOrder(update_3.id, order_3);
+  bid.AddLevel(level_3);
+
+  // Act
+  bid.RemoveLevel(2);
+  std::unordered_map<int, Order> orders = bid.FindLevel(1)->GetOrders(); // IOP
+
+  // Assert
+  std::string order_ids;
+  for (auto &iter: orders) {
+    order_ids += std::to_string(iter.first);
+  }
+
+  CHECK(order_ids == "2");
+}
+
+TEST_CASE ("Confirm price level has correct size after CopyIOP", "[SideTests]") {
+  // Arrange
+  Side bid;
+
+  OrderUpdate update_2(1, 'b', 'a', 1, 2, 1);
+  Order order_2(update_2);
+  auto *level_2 = new PriceLevel(2);
+  level_2->AddOrder(update_2.id, order_2);
+  bid.AddLevel(level_2);
+
+  OrderUpdate update_1(2, 'b', 'a', 2, 1, 1);
+  Order order_1(update_1);
+  OrderUpdate update_1_2(3, 'b', 'a', 3, 1, 1);
+  Order order_1_2(update_1_2);
+  auto *level_1 = new PriceLevel(1);
+  level_1->AddOrder(update_1.id, order_1);
+  level_1->AddOrder(update_1_2.id, order_1_2);
+  bid.AddLevel(level_1);
+
+  OrderUpdate update_3(4, 'b', 'a', 4, 3, 1);
+  Order order_3(update_3);
+  auto *level_3 = new PriceLevel(3);
+  level_3->AddOrder(update_3.id, order_3);
+  bid.AddLevel(level_3);
+
+  // Act
+  bid.RemoveLevel(2);
+  int level_size = bid.FindLevel(1)->GetSize();
+
+  // Assert
+  CHECK(level_size == 2);
 }
 
 TEST_CASE ("Left rotation after insert", "[SideTests]") {
@@ -393,109 +479,4 @@ TEST_CASE ("RightLeft rotation after remove", "[SideTests]") {
   bid.ToStringPreOrder(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "3 2 4");
-}
-
-TEST_CASE ("Confirm price level has correct orders after CopyIOP", "[SideTests]") {
-  // Arrange
-  Side bid;
-
-  OrderUpdate update_3(1, 'b', 'a', 1, 3, 1);
-  Order order_3(update_3);
-  auto *level_3 = new PriceLevel(3);
-  level_3->AddOrder(update_3.id, order_3);
-  bid.AddLevel(level_3);
-
-  OrderUpdate update_2(2, 'b', 'a', 2, 2, 1);
-  Order order_2(update_2);
-  auto *level_2 = new PriceLevel(2);
-  level_2->AddOrder(update_2.id, order_2);
-  bid.AddLevel(level_2);
-
-  OrderUpdate update_5(3, 'b', 'a', 3, 5, 1);
-  Order order_5(update_5);
-  auto *level_5 = new PriceLevel(5);
-  level_5->AddOrder(update_5.id, order_5);
-  bid.AddLevel(level_5);
-
-  OrderUpdate update_1(4, 'b', 'a', 4, 1, 1);
-  Order order_1(update_1);
-  auto *level_1 = new PriceLevel(1);
-  level_1->AddOrder(update_1.id, order_1);
-  bid.AddLevel(level_1);
-
-  OrderUpdate update_4(5, 'b', 'a', 5, 4, 1);
-  Order order_4(update_4);
-  auto *level_4 = new PriceLevel(4);
-  level_4->AddOrder(update_4.id, order_4);
-  bid.AddLevel(level_4);
-
-  OrderUpdate update_6(6, 'b', 'a', 6, 6, 1);
-  Order order_6(update_6);
-  auto *level_6 = new PriceLevel(6);
-  level_6->AddOrder(update_6.id, order_6);
-  bid.AddLevel(level_6);
-
-  // Act
-  bid.RemoveLevel(5);
-
-  // Assert
-  std::unordered_map<int, Order> orders = bid.FindLevel(4)->GetOrders();
-  std::string order_ids;
-  for (auto &iter: orders) {
-    order_ids += std::to_string(iter.first);
-  }
-
-  CHECK(order_ids == "5");
-}
-
-TEST_CASE ("Confirm price level has correct size after CopyIOP", "[SideTests]") {
-  // Arrange
-  Side bid;
-
-  OrderUpdate update_3(1, 'b', 'a', 1, 3, 1);
-  Order order_3(update_3);
-  auto *level_3 = new PriceLevel(3);
-  level_3->AddOrder(update_3.id, order_3);
-  bid.AddLevel(level_3);
-
-  OrderUpdate update_2(2, 'b', 'a', 2, 2, 1);
-  Order order_2(update_2);
-  OrderUpdate update_2_2(3, 'b', 'a', 3, 2, 1);
-  Order order_2_2(update_2_2);
-  auto *level_2 = new PriceLevel(2);
-  level_2->AddOrder(update_2.id, order_2);
-  level_2->AddOrder(update_2_2.id, order_2_2);
-  bid.AddLevel(level_2);
-
-  OrderUpdate update_5(4, 'b', 'a', 4, 5, 1);
-  Order order_5(update_5);
-  auto *level_5 = new PriceLevel(5);
-  level_5->AddOrder(update_5.id, order_5);
-  bid.AddLevel(level_5);
-
-  OrderUpdate update_1(5, 'b', 'a', 5, 1, 1);
-  Order order_1(update_1);
-  auto *level_1 = new PriceLevel(1);
-  level_1->AddOrder(update_1.id, order_1);
-  bid.AddLevel(level_1);
-
-  OrderUpdate update_4(6, 'b', 'a', 6, 4, 1);
-  Order order_4(update_4);
-  auto *level_4 = new PriceLevel(4);
-  level_4->AddOrder(update_4.id, order_4);
-  bid.AddLevel(level_4);
-
-  OrderUpdate update_6(7, 'b', 'a', 7, 6, 1);
-  Order order_6(update_6);
-  auto *level_6 = new PriceLevel(6);
-  level_6->AddOrder(update_6.id, order_6);
-  bid.AddLevel(level_6);
-
-  // Act
-  bid.RemoveLevel(3);
-
-  // Assert
-  int level_size = bid.FindLevel(2)->GetSize();
-
-  CHECK(level_size == 2);
 }
