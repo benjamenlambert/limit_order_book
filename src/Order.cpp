@@ -4,9 +4,9 @@
 
 #include "Order.h"
 
-//char Order::GetSide() const {
-//  return side_;
-//}
+char Order::GetSide() const {
+  return side_;
+}
 
 int Order::GetPrice() const {
   return price_;

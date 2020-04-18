@@ -24,8 +24,8 @@ PriceLevel *Side::FindMax() {
   return Max(root_);
 }
 
-void Side::RemoveLevel(int key) {
-  root_ = Remove(key, root_);
+void Side::RemoveLevel(int price) {
+  root_ = Remove(price, root_);
 }
 
 void Side::PrintSide() {
@@ -86,10 +86,18 @@ PriceLevel *Side::Remove(int price, PriceLevel *current_level) {
     current_level->right_ = Remove(price, current_level->right_);
   } else { // Found PriceLevel to remove
     if (current_level->left_ == nullptr) {// One child right and zero child remove
-      current_level = current_level->right_;
+      //current_level = current_level->right_;
+      PriceLevel *level = current_level->right_;
+      delete current_level;
+      current_level = nullptr;
+      return level;
       //std::cout << "One child right or zero child remove" << std::endl;
     } else if (current_level->right_ == nullptr) {// One child left remove
-      current_level = current_level->left_;
+      //current_level = current_level->left_;
+      PriceLevel *level = current_level->left_;
+      delete current_level;
+      current_level = nullptr;
+      return level;
       //std::cout << "One child left remove" << std::endl;
     } else { // Two child remove
       PriceLevel *iop = Max(current_level->left_); // Get in-order predecessor

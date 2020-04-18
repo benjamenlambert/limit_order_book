@@ -189,3 +189,68 @@ TEST_CASE ("Get number of orders at price level", "[PriceLevelTests]") {
   // Assert
   CHECK(num_orders == 2);
 }
+TEST_CASE ("Correctly copied IOP price", "[PriceLevelTests]") {
+  // Arrange
+  auto *root_level = new PriceLevel(2);
+  OrderUpdate root_update(1, 'b', 'a', 1, 2, 1);
+  Order root_order(root_update);
+  root_level->AddOrder(root_update.id, root_order);
+
+  auto *iop_level = new PriceLevel(1);
+  OrderUpdate iop_update(2, 'b', 'a', 2, 1, 1);
+  Order iop_order(iop_update);
+  iop_level->AddOrder(iop_update.id, iop_order);
+
+  // Act
+  root_level->CopyIOP(iop_level);
+  int price = root_level->GetPrice();
+
+  // Assert
+  CHECK(price == 1);
+}
+
+TEST_CASE ("Correctly copied IOP orders", "[PriceLevelTests]") {
+  // Arrange
+  auto *root_level = new PriceLevel(2);
+  OrderUpdate root_update(1, 'b', 'a', 1, 2, 1);
+  Order root_order(root_update);
+  root_level->AddOrder(root_update.id, root_order);
+
+  auto *iop_level = new PriceLevel(1);
+  OrderUpdate iop_update(2, 'b', 'a', 2, 1, 1);
+  Order iop_order(iop_update);
+  iop_level->AddOrder(iop_update.id, iop_order);
+
+  // Act
+  root_level->CopyIOP(iop_level);
+  std::unordered_map<int, Order> orders = root_level->GetOrders();
+
+  // Assert
+  std::string root_orders;
+  for (auto &iter: orders) {
+    root_orders += std::to_string(iter.first) + ' ';
+  }
+  root_orders.pop_back(); // Remove trailing space
+
+  CHECK(root_orders == "2");
+}
+
+TEST_CASE ("Correctly copied IOP size", "[PriceLevelTests]") {
+  // Arrange
+  auto *root_level = new PriceLevel(2);
+  OrderUpdate root_update(1, 'b', 'a', 1, 2, 1);
+  Order root_order(root_update);
+  root_level->AddOrder(root_update.id, root_order);
+
+  auto *iop_level = new PriceLevel(1);
+  OrderUpdate iop_update(2, 'b', 'a', 2, 1, 2);
+  Order iop_order(iop_update);
+  iop_level->AddOrder(iop_update.id, iop_order);
+
+  // Act
+  root_level->CopyIOP(iop_level);
+  int size = root_level->GetSize();
+
+  // Assert
+  CHECK(size == 2);
+}

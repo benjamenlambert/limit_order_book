@@ -2,9 +2,9 @@
 // Created by Benjamen Lambert on 3/24/2020.
 //
 
+#include <iostream>
+
 #include "PriceLevel.h"
-#include "Order.h"
-#include "OrderUpdate.h"
 
 void PriceLevel::AddOrder(int order_id, const Order &order) {
   orders_.insert(std::make_pair(order_id, order));
@@ -46,5 +46,5 @@ void PriceLevel::CopyIOP(PriceLevel *iop) {
   price_ = iop->price_;
   orders_ = iop->orders_;
   size_ = iop->size_;
-  //std::cout << "Copy IOP" << std::endl;
+  std::cout << "Copy IOP" << std::endl;
 }

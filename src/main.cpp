@@ -5,7 +5,7 @@
 #include "OrderBook.h"
 
 int main() {
-  std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/res_20190612.csv", true);
+  std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/leftleft_rotation_delete.csv", true);
 
   //data.ReadCSV("../data/hash_data.csv"); // Partial file
   //std::vector<std::vector<std::string>>
@@ -53,9 +53,8 @@ int main() {
       level->RemoveOrder(update.id); // Delete the order
 
       if (level->GetSize() == 0) { // If the size == 0, delete the level
+        //std::cout << "Price level " << level->GetPrice() << " removed." << std::endl;
         side->RemoveLevel(update.price);
-        delete level;
-        level = nullptr;
       }
       removes++;
     } else {
@@ -78,6 +77,14 @@ int main() {
   //std::cout << "\n****************************************************************\n" << std::endl;
 
   //book.GetSide('b')->PrintSide();
+
+  std::string pre_order, in_order;
+
+  book.GetSide('a')->ToStringPreOrder(pre_order);
+  book.GetSide('a')->ToStringInOrder(in_order);
+
+  std::cout << "\nPre-order: " << pre_order << std::endl;
+  std::cout << "In-order: " << in_order << std::endl;
 
   return 0;
 }

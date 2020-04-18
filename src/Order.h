@@ -17,7 +17,7 @@ class Order {
       : timestamp_(update.timestamp), side_(update.side), price_(update.price), qty_(update.qty) {
   }
 
-  //[[nodiscard]] char GetSide() const;
+  [[nodiscard]] char GetSide() const;
   [[nodiscard]] int GetPrice() const;
   [[nodiscard]] int GetQty() const;
 
