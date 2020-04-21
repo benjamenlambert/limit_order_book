@@ -46,5 +46,4 @@ void PriceLevel::CopyIOP(PriceLevel *iop) {
   price_ = iop->price_;
   orders_ = iop->orders_;
   size_ = iop->size_;
-  std::cout << "Copy IOP" << std::endl;
 }

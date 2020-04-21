@@ -189,7 +189,7 @@ TEST_CASE ("Get number of orders at price level", "[PriceLevelTests]") {
   // Assert
   CHECK(num_orders == 2);
 }
-TEST_CASE ("Correctly copied IOP price", "[PriceLevelTests]") {
+TEST_CASE ("Correctly copy IOP price", "[PriceLevelTests]") {
   // Arrange
   auto *root_level = new PriceLevel(2);
   OrderUpdate root_update(1, 'b', 'a', 1, 2, 1);
@@ -209,7 +209,7 @@ TEST_CASE ("Correctly copied IOP price", "[PriceLevelTests]") {
   CHECK(price == 1);
 }
 
-TEST_CASE ("Correctly copied IOP orders", "[PriceLevelTests]") {
+TEST_CASE ("Correctly copy IOP orders", "[PriceLevelTests]") {
   // Arrange
   auto *root_level = new PriceLevel(2);
   OrderUpdate root_update(1, 'b', 'a', 1, 2, 1);
@@ -235,7 +235,7 @@ TEST_CASE ("Correctly copied IOP orders", "[PriceLevelTests]") {
   CHECK(root_orders == "2");
 }
 
-TEST_CASE ("Correctly copied IOP size", "[PriceLevelTests]") {
+TEST_CASE ("Correctly copy IOP size", "[PriceLevelTests]") {
   // Arrange
   auto *root_level = new PriceLevel(2);
   OrderUpdate root_update(1, 'b', 'a', 1, 2, 1);

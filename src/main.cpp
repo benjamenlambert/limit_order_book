@@ -5,7 +5,7 @@
 #include "OrderBook.h"
 
 int main() {
-  std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/leftleft_rotation_delete.csv", true);
+  std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/new_test.csv", true);
 
   //data.ReadCSV("../data/hash_data.csv"); // Partial file
   //std::vector<std::vector<std::string>>
@@ -80,8 +80,8 @@ int main() {
 
   std::string pre_order, in_order;
 
-  book.GetSide('a')->ToStringPreOrder(pre_order);
-  book.GetSide('a')->ToStringInOrder(in_order);
+  book.GetSide('b')->ToStringPreOrder(pre_order);
+  book.GetSide('b')->ToStringInOrder(in_order);
 
   std::cout << "\nPre-order: " << pre_order << std::endl;
   std::cout << "In-order: " << in_order << std::endl;
