@@ -15,7 +15,7 @@
 // opposing Side.
 class Side {
  public:
-  Side() : root_(nullptr) {
+  Side() : root_(nullptr), top_of_book_(nullptr) {
   }
   ~Side();
 
@@ -33,6 +33,9 @@ class Side {
   // Print wrapper functions for testing
   void ToStringInOrder(std::string &str);
   void ToStringPreOrder(std::string &str);
+
+  // Pointer to the PriceLevel at the top of the book
+  PriceLevel *top_of_book_;
 
  private:
   PriceLevel *Add(PriceLevel *level, PriceLevel *current_level);
