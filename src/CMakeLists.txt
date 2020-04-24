@@ -3,7 +3,6 @@ project(src)
 set(HEADER_FILES
         HistoricalData.h
         MarketData.h
-        Event.h
         Order.h
         OrderBook.h
         OrderUpdate.h
@@ -14,7 +13,6 @@ set(HEADER_FILES
 set(SOURCE_FILES
         HistoricalData.cpp
         MarketData.cpp
-        Event.cpp
         Order.cpp
         OrderBook.cpp
         PriceLevel.cpp

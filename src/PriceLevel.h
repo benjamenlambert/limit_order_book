@@ -5,6 +5,7 @@
 #ifndef LIMIT_ORDER_BOOK_SRC_PRICELEVEL_H_
 #define LIMIT_ORDER_BOOK_SRC_PRICELEVEL_H_
 
+#include <iostream>
 #include <unordered_map>
 
 #include "Order.h"
@@ -15,6 +16,8 @@
 class PriceLevel {
  public:
   explicit PriceLevel(int price) : size_(0), price_(price), height_(0), left_(nullptr), right_(nullptr) {
+    orders_.max_load_factor(0.6); // Set max load factor
+    orders_.reserve(50); // Reserve space for n orders in map before a rehash is required
   }
 
   //  Adds an Order to the hash table with order id as the key.

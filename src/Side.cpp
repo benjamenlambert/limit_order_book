@@ -40,6 +40,10 @@ void Side::ToStringPreOrder(std::string &str) {
   ToStringPreOrder(root_, str);
 }
 
+void Side::ToDequeInOrder(std::deque<PriceLevel *> &deq) {
+  ToDequeInOrder(root_, deq);
+}
+
 //Private
 
 PriceLevel *Side::Add(PriceLevel *level, PriceLevel *current_level) {
@@ -343,6 +347,19 @@ void Side::ToStringPreOrder(PriceLevel *level, std::string &str) {
 
   ToStringPreOrder(level->left_, str);
   ToStringPreOrder(level->right_, str);
+}
+void Side::ToDequeInOrder(PriceLevel *level, std::deque<PriceLevel *> &deq) {
+  if (level == nullptr) {
+    return;
+  }
+
+  ToDequeInOrder(level->left_, deq);
+  deq.push_back(level);
+
+  if (level->left_ == nullptr && level->right_ == nullptr) {
+    return;
+  }
+
+  ToDequeInOrder(level->right_, deq);
 
 }
-

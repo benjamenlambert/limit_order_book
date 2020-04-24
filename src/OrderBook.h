@@ -5,6 +5,8 @@
 #ifndef LIMIT_ORDER_BOOK_SRC_ORDERBOOK_H_
 #define LIMIT_ORDER_BOOK_SRC_ORDERBOOK_H_
 
+#include <queue>
+
 #include "Side.h"
 
 // The order book containing both sides (bid and ask) of the book.
@@ -16,14 +18,19 @@ class OrderBook {
   // Wrapper function
   void UpdateBook(const OrderUpdate &update);
 
+  Side *GetSide(char side);
   void PrintReport(double duration);
+  void PrintBook();
+
+  std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> GetMarketDepth(int levels);
 
  private:
-  Side *GetSide(char side);
 
   void AddOrder(const OrderUpdate &update);
   void RemoveOrder(const OrderUpdate &update);
   void ModifyOrder(const OrderUpdate &update);
+
+  void Print();
 
   Side bid_;
   Side ask_;

@@ -35,7 +35,7 @@ std::vector<std::vector<std::string>> HistoricalData::ReadCSV(const std::string 
 
       csv.push_back(row);
     }
-    std::cout << "Complete." << std::endl;
+    std::cout << "Complete.\n" << std::endl;
   } else {
     std::cout << "File not open!!!" << std::endl;
   }

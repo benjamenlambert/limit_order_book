@@ -5,6 +5,7 @@
 #ifndef LIMIT_ORDER_BOOK_SRC_SIDE_H_
 #define LIMIT_ORDER_BOOK_SRC_SIDE_H_
 
+#include <deque>
 #include <iostream>
 
 #include "PriceLevel.h"
@@ -33,6 +34,8 @@ class Side {
   // Print wrapper functions for testing
   void ToStringInOrder(std::string &str);
   void ToStringPreOrder(std::string &str);
+
+  void ToDequeInOrder(std::deque<PriceLevel *> &deq);
 
   // Pointer to the PriceLevel at the top of the book
   PriceLevel *top_of_book_;
@@ -70,6 +73,8 @@ class Side {
   // Print functions for testing
   void ToStringInOrder(PriceLevel *level, std::string &str);
   void ToStringPreOrder(PriceLevel *level, std::string &str);
+
+  void ToDequeInOrder(PriceLevel *level, std::deque<PriceLevel *> &deq);
 
   PriceLevel *root_;
 };
