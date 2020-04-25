@@ -18,13 +18,15 @@ class OrderBook {
   // Wrapper function
   void UpdateBook(const OrderUpdate &update);
 
-  Side *GetSide(char side);
   void PrintReport(double duration);
   void PrintBook();
 
-  std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> GetMarketDepth(int levels);
+  // Returns a pair of deques each with n_levels of PriceLevels
+  std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> GetMarketDepth(int n_levels);
 
  private:
+  // Returns the requested side of the book
+  Side *GetSide(char side);
 
   void AddOrder(const OrderUpdate &update);
   void RemoveOrder(const OrderUpdate &update);

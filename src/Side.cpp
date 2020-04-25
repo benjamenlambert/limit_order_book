@@ -44,6 +44,10 @@ void Side::ToDequeInOrder(std::deque<PriceLevel *> &deq) {
   ToDequeInOrder(root_, deq);
 }
 
+void Side::ToDequeInOrder(char side, int n_levels, std::deque<PriceLevel *> &deq) {
+  ToDequeInOrder(root_, side, n_levels, deq);
+}
+
 //Private
 
 PriceLevel *Side::Add(PriceLevel *level, PriceLevel *current_level) {
@@ -334,6 +338,7 @@ void Side::ToStringInOrder(PriceLevel *level, std::string &str) {
   ToStringInOrder(level->right_, str);
 
 }
+
 void Side::ToStringPreOrder(PriceLevel *level, std::string &str) {
   if (level == nullptr) {
     return;
@@ -348,6 +353,7 @@ void Side::ToStringPreOrder(PriceLevel *level, std::string &str) {
   ToStringPreOrder(level->left_, str);
   ToStringPreOrder(level->right_, str);
 }
+
 void Side::ToDequeInOrder(PriceLevel *level, std::deque<PriceLevel *> &deq) {
   if (level == nullptr) {
     return;
@@ -362,4 +368,30 @@ void Side::ToDequeInOrder(PriceLevel *level, std::deque<PriceLevel *> &deq) {
 
   ToDequeInOrder(level->right_, deq);
 
+}
+
+void Side::ToDequeInOrder(PriceLevel *level, char side, int &n_levels, std::deque<PriceLevel *> &deq) {
+  if (level == nullptr) {
+    return;
+  }
+
+  if (side == 'b') {
+    ToDequeInOrder(level->right_, side, n_levels, deq);
+  } else {
+    ToDequeInOrder(level->left_, side, n_levels, deq);
+  }
+
+  if (n_levels > 0) {
+    deq.push_back(level);
+    n_levels--;
+  }
+
+  if ((level->left_ == nullptr && level->right_ == nullptr) || n_levels == 0) {
+    return;
+  }
+  if (side == 'b') {
+    ToDequeInOrder(level->left_, side, n_levels, deq);
+  } else {
+    ToDequeInOrder(level->right_, side, n_levels, deq);
+  }
 }

@@ -36,6 +36,7 @@ class Side {
   void ToStringPreOrder(std::string &str);
 
   void ToDequeInOrder(std::deque<PriceLevel *> &deq);
+  void ToDequeInOrder(char side, int n_levels, std::deque<PriceLevel *> &deq);
 
   // Pointer to the PriceLevel at the top of the book
   PriceLevel *top_of_book_;
@@ -75,6 +76,7 @@ class Side {
   void ToStringPreOrder(PriceLevel *level, std::string &str);
 
   void ToDequeInOrder(PriceLevel *level, std::deque<PriceLevel *> &deq);
+  void ToDequeInOrder(PriceLevel *level, char side, int &n_levels, std::deque<PriceLevel *> &deq);
 
   PriceLevel *root_;
 };

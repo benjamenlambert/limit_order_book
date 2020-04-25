@@ -32,9 +32,10 @@ int main() {
     file << csv[i][0] << ',' << csv[i][1] << ',' << csv[i][2] << ',' << csv[i][3] << ',' << csv[i][4] << ','
          << csv[i][5] << ',';
 
-    std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> depth = book.GetMarketDepth(5);
+    int n_levels = 5;
+    std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> depth = book.GetMarketDepth(n_levels);
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < n_levels; i++) {
       if (!depth.first.empty()) {
         file << depth.first.front()->GetPrice() << ',' << depth.first.front()->GetSize() << ',';
         depth.first.pop_front();
@@ -42,7 +43,7 @@ int main() {
         file << ",0,";
       }
     }
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < (n_levels - 1); i++) {
       if (!depth.second.empty()) {
         file << depth.second.front()->GetPrice() << ',' << depth.second.front()->GetSize() << ',';
         depth.second.pop_front();

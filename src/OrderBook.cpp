@@ -23,7 +23,7 @@ void OrderBook::PrintReport(double duration) {
   std::cout << " " << mods_ << " modify order messages." << std::endl;
   std::cout << " " << tob_updates_ << " top of book updates." << std::endl;
   std::cout << " " << (adds_ + removes_ + mods_) << " total messages." << std::endl;
-  std::cout << " " << duration << " microseconds." << std::endl;
+  std::cout << " " << (duration / 1000000) << " seconds." << std::endl;
   std::cout << " " << std::setprecision(2) << duration / (adds_ + removes_ + mods_) << " microseconds per message.\n"
             << std::endl;
   std::cout << "********************************" << std::endl;
@@ -150,24 +150,13 @@ void OrderBook::Print() {
 }
 std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> OrderBook::GetMarketDepth(int n_levels) {
 
-  std::deque<PriceLevel *> bids, asks;
-  bid_.ToDequeInOrder(bids);
-  ask_.ToDequeInOrder(asks);
-
   std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> book;
 
-  for (int n = 0; n < n_levels; n++) {
-    if (!bids.empty()) {
-      book.first.push_back(bids.back());
-      bids.pop_back();
-    }
-  }
+  bid_.ToDequeInOrder('b', n_levels, book.first);
+  ask_.ToDequeInOrder('a', n_levels, book.second);
 
-  for (int n = 0; n < n_levels; n++) {
-    if (!asks.empty()) {
-      book.second.push_back(asks.front());
-      asks.pop_front();
-    }
-  }
+  //bid_.ToDequeInOrder(book.first);
+  //ask_.ToDequeInOrder(book.second);
+
   return book;
 }
