@@ -12,17 +12,20 @@
 // The order book containing both sides (bid and ask) of the book.
 class OrderBook {
  public:
+  typedef std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> Snapshot;
+
   OrderBook() : adds_(0), removes_(0), mods_(0), tob_updates_(0) {
   }
 
   // Wrapper function
   void UpdateBook(const OrderUpdate &update);
 
-  void PrintReport(double duration);
-  void PrintBook();
+  void PrintReport(std::string file_name, double duration);
+  void WriteToFile(std::ofstream &file, const OrderUpdate &update, Snapshot &snapshot, int n_levels);
+  void FormatOutputFile(std::ofstream &file, int n_levels);
 
-  // Returns a pair of deques each with n_levels of PriceLevels
-  std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> GetMarketDepth(int n_levels);
+  // Returns a pair of deques each with n_levels of PriceLevels.  Will return the max of n_levels or the number of levels currently on that side of the book
+  Snapshot GetSnapshot(int n_levels);
 
  private:
   // Returns the requested side of the book
@@ -32,7 +35,6 @@ class OrderBook {
   void RemoveOrder(const OrderUpdate &update);
   void ModifyOrder(const OrderUpdate &update);
 
-  void Print();
 
   Side bid_;
   Side ask_;

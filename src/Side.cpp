@@ -304,7 +304,7 @@ void Side::InOrder(PriceLevel *level) {
     InOrder(level->left_);
     std::cout << "Price Level : " << level->GetPrice() << std::endl;
     std::cout << "\tSize : " << level->GetSize() << " Num orders : " << level->NumOrders() << std::endl;
-    for (auto &iter: level->GetOrders()) {
+    for (const auto &iter : level->GetOrders()) {
       std::cout << "\t\tid: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
     }
     InOrder(level->right_);
@@ -316,7 +316,7 @@ void Side::ReverseOrder(PriceLevel *level) {
     ReverseOrder(level->right_);
     std::cout << "Price Level : " << level->GetPrice() << std::endl;
     std::cout << "\tSize : " << level->GetSize() << " Num orders : " << level->NumOrders() << std::endl;
-    for (auto &iter: level->GetOrders()) {
+    for (const auto &iter : level->GetOrders()) {
       std::cout << "\t\tid: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
     }
     ReverseOrder(level->left_);

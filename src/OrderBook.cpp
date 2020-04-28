@@ -2,9 +2,29 @@
 // Created by Benjamen Lambert on 4/2/2020.
 //
 
+#include <fstream>
 #include <iomanip>
 
 #include "OrderBook.h"
+
+void OrderBook::FormatOutputFile(std::ofstream &file, int n_levels) {
+  std::string col_headers = "timestamp,side,action,id,price,quantity,";
+
+  for (int n = 0; n < n_levels; n++) {
+    col_headers.append("bp" + std::to_string(n) + ",");
+    col_headers.append("bq" + std::to_string(n) + ",");
+  }
+
+  for (int n = 0; n < n_levels; n++) {
+    col_headers.append("ap" + std::to_string(n) + ",");
+    col_headers.append("aq" + std::to_string(n) + ",");
+  }
+
+  col_headers.pop_back();
+  col_headers.append("\n");
+
+  file << col_headers;
+}
 
 void OrderBook::UpdateBook(const OrderUpdate &update) {
   if (update.action == 'a') {
@@ -16,8 +36,9 @@ void OrderBook::UpdateBook(const OrderUpdate &update) {
   }
 }
 
-void OrderBook::PrintReport(double duration) {
+void OrderBook::PrintReport(std::string file_name, double duration) {
   std::cout << "************ REPORT ************\n" << std::endl;
+  std::cout << " " << file_name << std::endl;
   std::cout << " " << adds_ << " add order messages." << std::endl;
   std::cout << " " << removes_ << " remove order messages." << std::endl;
   std::cout << " " << mods_ << " modify order messages." << std::endl;
@@ -26,7 +47,51 @@ void OrderBook::PrintReport(double duration) {
   std::cout << " " << (duration / 1000000) << " seconds." << std::endl;
   std::cout << " " << std::setprecision(2) << duration / (adds_ + removes_ + mods_) << " microseconds per message.\n"
             << std::endl;
-  std::cout << "********************************" << std::endl;
+  std::cout << "********************************\n" << std::endl;
+}
+
+void OrderBook::WriteToFile(std::ofstream &file,
+                            const OrderUpdate &update,
+                            OrderBook::Snapshot &snapshot,
+                            int n_levels) {
+
+  file << update.timestamp << ',' << update.side << ',' << update.action << ',' << update.id << ',' << update.price
+       << ','
+       << update.qty << ',';
+
+  for (int i = 0; i < n_levels; i++) {
+    if (!snapshot.first.empty()) {
+      file << snapshot.first.front()->GetPrice() << ',' << snapshot.first.front()->GetSize() << ',';
+      snapshot.first.pop_front();
+    } else {
+      file << ",0,";
+    }
+  }
+  for (int i = 0; i < (n_levels - 1); i++) {
+    if (!snapshot.second.empty()) {
+      file << snapshot.second.front()->GetPrice() << ',' << snapshot.second.front()->GetSize() << ',';
+      snapshot.second.pop_front();
+    } else {
+      file << ",0,";
+    }
+  }
+  if (!snapshot.second.empty()) {
+    file << snapshot.second.front()->GetPrice() << ',' << snapshot.second.front()->GetSize();
+    snapshot.second.pop_front();
+  } else {
+    file << ",0";
+  }
+  file << '\n';
+}
+
+std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> OrderBook::GetSnapshot(int n_levels) {
+
+  OrderBook::Snapshot snapshot;
+
+  bid_.ToDequeInOrder('b', n_levels, snapshot.first);
+  ask_.ToDequeInOrder('a', n_levels, snapshot.second);
+
+  return snapshot;
 }
 
 Side *OrderBook::GetSide(char side) {
@@ -135,28 +200,5 @@ void OrderBook::ModifyOrder(const OrderUpdate &update) {
   mods_++;
 }
 
-void OrderBook::PrintBook() {
-  Print();
-}
 
-void OrderBook::Print() {
 
-  ask_.PrintSide();
-
-  std::cout << "\n****************************************************************\n" << std::endl;
-
-  bid_.PrintSide();
-
-}
-std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> OrderBook::GetMarketDepth(int n_levels) {
-
-  std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> book;
-
-  bid_.ToDequeInOrder('b', n_levels, book.first);
-  ask_.ToDequeInOrder('a', n_levels, book.second);
-
-  //bid_.ToDequeInOrder(book.first);
-  //ask_.ToDequeInOrder(book.second);
-
-  return book;
-}

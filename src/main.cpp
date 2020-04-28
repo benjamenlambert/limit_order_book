@@ -1,71 +1,48 @@
 #include <chrono>
+#include <experimental/filesystem>
 #include <fstream>
 
-#include "HistoricalData.h"
+#include "Utilities.h"
 #include "OrderBook.h"
 
 int main() {
-  std::vector<std::vector<std::string>> csv = HistoricalData::ReadCSV("../data/res_20190612.csv", true);
-  int num_rows = csv.size();
-  std::cout << "CSV contains " << num_rows << " rows.\n" << std::endl;
+  for (const auto
+        &entry : std::experimental::filesystem::directory_iterator("../data/")) { // Process all data files in ../data/
+    if (entry.path().extension() == ".csv") { // Only process .csv files
+      std::vector<std::vector<std::string>> csv = utilities::ReadCSV(entry.path(), true);
 
-  std::ofstream file;
-  file.open("../output/test_write.csv");
+      auto start =
+          std::chrono::steady_clock::now(); // Total time process read updates from memory, process book, and write to file
 
-  auto start = std::chrono::steady_clock::now();
+      OrderBook book;
 
-  file
-      << "timestamp,side,action,id,price,quantity,bp0,bq0,bp1,bq1,bp2,bq2,bp3,bq3,bp4,bq4,ap0,aq0,ap1,aq1,ap2,aq2,ap3,aq3,ap4,aq4\n";
+      std::ofstream file;
+      std::string file_name = entry.path().string();
+      file.open(utilities::FormatFileName(file_name));
 
-  OrderBook book;
+      int n_levels = 5; // Number of levels to be retrieved in snapshot and written to file
+      book.FormatOutputFile(file, n_levels);
 
-  for (int i = 0; i < num_rows; i++) {
-    OrderUpdate update(std::stoull(csv[i][0]),
-                       csv[i][1][0],
-                       csv[i][2][0],
-                       std::stoi(csv[i][3]),
-                       std::stoi(csv[i][4]),
-                       std::stoi(csv[i][5]));
+      for (const auto &row : csv) {
+        OrderUpdate update(std::stoull(row[0]),
+                           row[1][0],
+                           row[2][0],
+                           std::stoi(row[3]),
+                           std::stoi(row[4]),
+                           std::stoi(row[5]));
 
-    book.UpdateBook(update);
-
-    file << csv[i][0] << ',' << csv[i][1] << ',' << csv[i][2] << ',' << csv[i][3] << ',' << csv[i][4] << ','
-         << csv[i][5] << ',';
-
-    int n_levels = 5;
-    std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> depth = book.GetMarketDepth(n_levels);
-
-    for (int i = 0; i < n_levels; i++) {
-      if (!depth.first.empty()) {
-        file << depth.first.front()->GetPrice() << ',' << depth.first.front()->GetSize() << ',';
-        depth.first.pop_front();
-      } else {
-        file << ",0,";
+        book.UpdateBook(update); // Process the update
+        OrderBook::Snapshot snapshot = book.GetSnapshot(n_levels); // Create snapshot of book
+        book.WriteToFile(file, update, snapshot, n_levels); // Write snapshot to file
       }
+
+      file.close();
+
+      auto stop = std::chrono::steady_clock::now();
+      double duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+
+      book.PrintReport(file_name, duration); // Summary information
     }
-    for (int i = 0; i < (n_levels - 1); i++) {
-      if (!depth.second.empty()) {
-        file << depth.second.front()->GetPrice() << ',' << depth.second.front()->GetSize() << ',';
-        depth.second.pop_front();
-      } else {
-        file << ",0,";
-      }
-    }
-    if (!depth.second.empty()) {
-      file << depth.second.front()->GetPrice() << ',' << depth.second.front()->GetSize();
-      depth.second.pop_front();
-    } else {
-      file << ",0";
-    }
-    file << '\n';
   }
-
-  auto stop = std::chrono::steady_clock::now();
-  double duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
-
-  book.PrintReport(duration);
-
-  file.close();
-
   return 0;
 }
