@@ -20,6 +20,7 @@ class OrderBook {
   // Wrapper function
   void UpdateBook(const OrderUpdate &update);
 
+  void PrintBook();
   void PrintReport(std::string file_name, double duration);
   void WriteToFile(std::ofstream &file, const OrderUpdate &update, Snapshot &snapshot, int n_levels);
   void FormatOutputFile(std::ofstream &file, int n_levels);
@@ -35,6 +36,7 @@ class OrderBook {
   void RemoveOrder(const OrderUpdate &update);
   void ModifyOrder(const OrderUpdate &update);
 
+  void Print();
 
   Side bid_;
   Side ask_;

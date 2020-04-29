@@ -4,10 +4,6 @@
 
 #include "Order.h"
 
-char Order::GetSide() const {
-  return side_;
-}
-
 int Order::GetPrice() const {
   return price_;
 }
@@ -16,6 +12,10 @@ int Order::GetQty() const {
   return qty_;
 }
 
-void Order::UpdateQty(int qty) {
+char Order::GetSide() const {
+  return side_;
+}
+
+void Order::UpdateQty(const int &qty) {
   qty_ = qty;
 }

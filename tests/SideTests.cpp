@@ -16,7 +16,7 @@ TEST_CASE ("Add price level to side", "[SideTests]") {
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "1");
 }
@@ -89,7 +89,7 @@ TEST_CASE ("Print side in order", "[SideTests]") {
 
   // Act
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
 
   // Assert
@@ -108,7 +108,7 @@ TEST_CASE ("Print side pre order", "[SideTests]") {
 
   // Act
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
 
   // Assert
@@ -128,7 +128,7 @@ TEST_CASE ("Remove price level with zero children from side", "[SideTests]") {
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "1");
 }
@@ -150,7 +150,7 @@ TEST_CASE ("Remove price level with one right child from side", "[SideTests]") {
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "1 2 4");
 }
@@ -173,7 +173,7 @@ TEST_CASE ("Remove price level with one left child from side", "[SideTests]") {
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "1 2 3");
 }
@@ -200,7 +200,7 @@ TEST_CASE ("Remove price level with two children from side", "[SideTests]") {
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "1 2 3 4 6");
 }
@@ -220,7 +220,7 @@ TEST_CASE ("Remove root price level w/ IOP (two children) from side", "[SideTest
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "1 3");
 }
@@ -238,7 +238,7 @@ TEST_CASE ("Remove root price level w/ IOP (one child) from side", "[SideTests]"
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "1");
 }
@@ -256,7 +256,7 @@ TEST_CASE ("Remove root price level w/o IOP from side", "[SideTests]") {
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   in_order.pop_back(); // Remove trailing space
   CHECK(in_order == "2");
 }
@@ -272,7 +272,7 @@ TEST_CASE ("Remove root price level with no children", "[SideTests]") {
 
   // Assert
   std::string in_order;
-  bid.ToStringInOrder(in_order); // Save node key values to in_order
+  bid.InOrderString(in_order); // Save node key values to in_order
   CHECK(in_order.empty());
 }
 
@@ -290,7 +290,7 @@ TEST_CASE ("Left rotation after insert", "[SideTests]") {
 
   // Assert
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "2 1 3");
 }
@@ -312,7 +312,7 @@ TEST_CASE ("Left rotation after remove", "[SideTests]") {
 
   // Assert
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "3 2 4");
 }
@@ -331,7 +331,7 @@ TEST_CASE ("Right rotation after insert", "[SideTests]") {
 
   // Assert
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "2 1 3");
 }
@@ -353,7 +353,7 @@ TEST_CASE ("Right rotation after remove", "[SideTests]") {
 
   // Assert
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "2 1 3");
 }
@@ -372,7 +372,7 @@ TEST_CASE ("LeftRight rotation after insert", "[SideTests]") {
 
   // Assert
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "2 1 3");
 }
@@ -395,7 +395,7 @@ TEST_CASE ("LeftRight rotation after remove", "[SideTests]") {
 
   // Assert
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "2 1 3");
 }
@@ -414,7 +414,7 @@ TEST_CASE ("RightLeft rotation after insert", "[SideTests]") {
 
   // Assert
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "2 1 3");
 }
@@ -436,7 +436,7 @@ TEST_CASE ("RightLeft rotation after remove", "[SideTests]") {
 
   // Assert
   std::string pre_order;
-  bid.ToStringPreOrder(pre_order); // Save node key values to in_order
+  bid.PreOrderString(pre_order); // Save node key values to in_order
   pre_order.pop_back(); // Remove trailing space
   CHECK(pre_order == "3 2 4");
 }

@@ -36,6 +36,10 @@ void OrderBook::UpdateBook(const OrderUpdate &update) {
   }
 }
 
+void OrderBook::PrintBook() {
+  Print();
+}
+
 void OrderBook::PrintReport(std::string file_name, double duration) {
   std::cout << "************ REPORT ************\n" << std::endl;
   std::cout << " " << file_name << std::endl;
@@ -88,8 +92,8 @@ std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> OrderBook::GetSnap
 
   OrderBook::Snapshot snapshot;
 
-  bid_.ToDequeInOrder('b', n_levels, snapshot.first);
-  ask_.ToDequeInOrder('a', n_levels, snapshot.second);
+  bid_.GetSnapshot('b', n_levels, snapshot.first);
+  ask_.GetSnapshot('a', n_levels, snapshot.second);
 
   return snapshot;
 }
@@ -109,44 +113,37 @@ void OrderBook::AddOrder(const OrderUpdate &update) {
   if (side->top_of_book_ != nullptr) { // If top_of_book_ is not nullptr
     int order_price = order.GetPrice();
     int top_of_book_price = side->top_of_book_->GetPrice();
+
     if (order_price
         == top_of_book_price) { // If the order price is equal to the top of the book, go straight there
       side->top_of_book_->AddOrder(update.id, order); // Insert the order
-      //std::cout << "Adding order " << update.id << " to top of book on the " << (update.side == 'b' ? "bid" : "ask")
-      //          << " side-> (" << top_of_book_price << ")" << std::endl;
-      tob_updates_++;
-    } else { // The order is not at the top of the book, so have to find its level
+      tob_updates_++; // Update top of book count
+    } else { // The order is not equal to the top of the book, so have to find its level
       PriceLevel *level = side->FindLevel(order_price);  // Find the price level
 
-      if (level != nullptr) { // If it exists, add the order
-        level->AddOrder(update.id, order);
+      if (level != nullptr) { // If it exists
+        level->AddOrder(update.id, order); // Add the order
       } else {
         auto *new_level = new PriceLevel(order_price); // Create the price level
         new_level->AddOrder(update.id, order); // Add the order to the price level
-        side->AddLevel(new_level); // Add the price level to the book
+        side->AddLevel(new_level); // Add the price level to the book recursively to ensure tree balance
 
         // Check to see if the level is a new top of book
-        if (order.GetSide() == 'b') {
-          if (order_price > top_of_book_price) {
+        if (order.GetSide() == 'b') { // If the order is a bid
+          if (order_price > top_of_book_price) { // And it is greater than the current top of book
             side->top_of_book_ = new_level; // Update top_of_book_ on the bid side
-            //std::cout << "New top of book on the bid side after adding order " << update.id << ".  ("
-            //          << top_of_book_price << ")" << std::endl;
           }
-        } else if (order_price < top_of_book_price) {
+        } else if (order_price
+            < top_of_book_price) { // The order is an ask.  If it is less than the current top of the book
           side->top_of_book_ = new_level; // Update top_of_book_ on the ask side
-          //std::cout << "New top of book on the ask side after adding order " << update.id << ".  ("
-          //          << top_of_book_price << ")" << std::endl;
         }
       }
     }
-  } else { // top_of_book is nullptr, this is the first order being added to the book, so I know it must be a new level
+  } else { // top_of_book is nullptr. This is the first order being added to the book, so must be a new level
     auto *new_level = new PriceLevel(order.GetPrice()); // Create the price level
     new_level->AddOrder(update.id, order); // Add the order to the price level
     side->AddLevel(new_level); // Add the price level to the book
     side->top_of_book_ = new_level; // Update the top_of_book_
-
-    //std::cout << "Creating top of book on " << (update.side == 'b' ? "bid" : "ask") << " side with order "
-    //          << update.id << std::endl;
   }
   adds_++;
 }
@@ -158,17 +155,12 @@ void OrderBook::RemoveOrder(const OrderUpdate &update) {
   if (update.price
       == top_of_book_price) { // If the order price is equal to the top of the book, go straight there
     side->top_of_book_->RemoveOrder(update.id); // Remove the order
-    //std::cout << "Removing order " << update.id << " from top of book on the " << (update.side == 'b' ? "bid" : "ask") << " side->" << std::endl;
     if (side->top_of_book_->GetSize() == 0) { // If the size of the top_of_book_ is now 0
-      side->RemoveLevel(top_of_book_price); // Remove the level (Even though we know where the level is, we have to remove recursively to ensure tree balance)
+      side->RemoveLevel(top_of_book_price); // Remove the level recursively to ensure tree balance
       if (update.side == 'b') {
-        side->top_of_book_ = side->FindMax(); // Update top_of_book_ on the bid side
-        //std::cout << "New top of book on the bid side after deleting order " << update.id << ". ("
-        //          << top_of_book_price << ")" << std::endl;
+        side->top_of_book_ = side->FindMax(); // And update top_of_book_ on the bid side to the new highest bid
       } else {
-        side->top_of_book_ = side->FindMin(); // Update top_of_book_ on the ask side
-        //std::cout << "New top of book on the ask side after deleting order " << update.id << ". ("
-        //          << top_of_book_price << ")" << std::endl;
+        side->top_of_book_ = side->FindMin(); // Or update top_of_book_ on the ask side to the new lowest ask
       }
     }
     tob_updates_++;
@@ -177,7 +169,7 @@ void OrderBook::RemoveOrder(const OrderUpdate &update) {
 
     level->RemoveOrder(update.id); // Delete the order
 
-    if (level->GetSize() == 0) { // If the size == 0
+    if (level->GetSize() == 0) { // If the size is now 0
       side->RemoveLevel(update.price); // Delete the level
     }
   }
@@ -200,5 +192,14 @@ void OrderBook::ModifyOrder(const OrderUpdate &update) {
   mods_++;
 }
 
+void OrderBook::Print() {
+
+  ask_.PrintSide();
+
+  std::cout << "\n****************************************************************\n" << std::endl;
+
+  bid_.PrintSide();
+
+}
 
 

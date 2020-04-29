@@ -5,9 +5,14 @@
 #ifndef LIMIT_ORDER_BOOK_SRC_ORDERUPDATE_H_
 #define LIMIT_ORDER_BOOK_SRC_ORDERUPDATE_H_
 
-// Structure containing the information in an order update.
+// Structure containing the information included in an order update.
 struct OrderUpdate {
-  OrderUpdate(unsigned long long int timestamp, char side, char action, int id, int price, int qty) :
+  OrderUpdate(const unsigned long long int &timestamp,
+              const char &side,
+              const char &action,
+              const int &id,
+              const int &price,
+              const int &qty) :
       timestamp(timestamp),
       side(side),
       action(action),

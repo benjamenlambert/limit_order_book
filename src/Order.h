@@ -7,7 +7,7 @@
 
 #include "OrderUpdate.h"
 
-// Class containing the information in an order.  Orders are stored in a hash table of all Orders at a given price,
+// Class containing the information included in an order.  Orders are stored in a hash table of all Orders at a given price,
 // using the order id as the key.  This implementation does not require the order id to be stored within the order
 // itself, as it is implicitly stored in the key.
 class Order {
@@ -17,12 +17,12 @@ class Order {
       : timestamp_(update.timestamp), side_(update.side), price_(update.price), qty_(update.qty) {
   }
 
-  [[nodiscard]] char GetSide() const;
   [[nodiscard]] int GetPrice() const;
   [[nodiscard]] int GetQty() const;
+  [[nodiscard]] char GetSide() const;
 
   // Updates the order quantity in the event of a modify order message.
-  void UpdateQty(int qty);
+  void UpdateQty(const int &qty);
 
  private:
   unsigned long long int timestamp_; // Microseconds since the market open.

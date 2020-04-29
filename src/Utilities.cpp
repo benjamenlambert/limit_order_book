@@ -2,7 +2,7 @@
 // Created by Benjamen Lambert on 4/28/2020.
 //
 
-#include <experimental/filesystem>
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 
@@ -45,8 +45,8 @@ std::vector<std::vector<std::string>> utilities::ReadCSV(const std::string &file
 
 std::string utilities::FormatFileName(const std::string &file_name) {
 
-  if (!std::experimental::filesystem::exists("../output/")) { // Create directory
-    std::experimental::filesystem::create_directory("../output/");
+  if (!std::filesystem::exists("../output/")) { // Create directory
+    std::filesystem::create_directory("../output/");
   }
 
   std::string f_name = file_name;

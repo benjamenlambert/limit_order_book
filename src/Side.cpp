@@ -12,54 +12,53 @@ void Side::AddLevel(PriceLevel *level) {
   root_ = Add(level, root_);
 }
 
-PriceLevel *Side::FindLevel(int price) {
+PriceLevel *Side::FindLevel(const int &price) {
   return Find(price, root_);
 }
 
-PriceLevel *Side::FindMin() {
-  return Min(root_);
-}
-
-PriceLevel *Side::FindMax() {
-  return Max(root_);
-}
-
-void Side::RemoveLevel(int price) {
+void Side::RemoveLevel(const int &price) {
   root_ = Remove(price, root_);
 }
 
-void Side::PrintSide() {
-  ReverseOrder(root_);
+PriceLevel *Side::FindMin() const {
+  return Min(root_);
 }
 
-void Side::ToStringInOrder(std::string &str) {
-  ToStringInOrder(root_, str);
+PriceLevel *Side::FindMax() const {
+  return Max(root_);
 }
 
-void Side::ToStringPreOrder(std::string &str) {
-  ToStringPreOrder(root_, str);
+void Side::GetSnapshot(const char &side, int n_levels, std::deque<PriceLevel *> &deq) const {
+  GetSnapshot(root_, side, n_levels, deq);
 }
 
-void Side::ToDequeInOrder(std::deque<PriceLevel *> &deq) {
-  ToDequeInOrder(root_, deq);
+void Side::InOrderString(std::string &str) const {
+  InOrderString(root_, str);
 }
 
-void Side::ToDequeInOrder(char side, int n_levels, std::deque<PriceLevel *> &deq) {
-  ToDequeInOrder(root_, side, n_levels, deq);
+void Side::PreOrderString(std::string &str) const {
+  PreOrderString(root_, str);
+}
+
+void Side::PrintSide() const {
+  PrintReverseOrder(root_);
 }
 
 //Private
 
-PriceLevel *Side::Add(PriceLevel *level, PriceLevel *current_level) {
-  if (current_level == nullptr) {
+PriceLevel *Side::Add(PriceLevel *level,
+                      PriceLevel *current_level) { // Recursive add.  Required to ensure balance of the tree
+  if (current_level == nullptr) { // PriceLevel not found
     current_level = level;
   }
+  int level_price = level->GetPrice();
+  int current_level_price = current_level->GetPrice();
 
-  if (level->GetPrice() < current_level->GetPrice()) {
+  if (level_price < current_level_price) { // Search for PriceLevel
     current_level->left_ = Add(level, current_level->left_);
-  } else if (level->GetPrice() > current_level->GetPrice()) {
+  } else if (level_price > current_level_price) {
     current_level->right_ = Add(level, current_level->right_);
-  } else {
+  } else { // PriceLevel found.  Should not happen as no duplicates should exist
     return current_level;
   }
 
@@ -68,15 +67,15 @@ PriceLevel *Side::Add(PriceLevel *level, PriceLevel *current_level) {
   return current_level;
 }
 
-PriceLevel *Side::Find(int price, PriceLevel *current_level) {
-  if (current_level == nullptr) {
+PriceLevel *Side::Find(int price, PriceLevel *current_level) { // Recursive find
+  if (current_level == nullptr) { // PriceLevel not found
     return current_level;
   } else {
     int current_level_price = current_level->GetPrice();
 
-    if (price == current_level_price) {
+    if (price == current_level_price) { // PriceLevel found.
       return current_level;
-    } else if (price < current_level_price) {
+    } else if (price < current_level_price) { // Search for PriceLevel
       return Find(price, current_level->left_);
     } else {
       return Find(price, current_level->right_);
@@ -84,34 +83,33 @@ PriceLevel *Side::Find(int price, PriceLevel *current_level) {
   }
 }
 
-PriceLevel *Side::Remove(int price, PriceLevel *current_level) {
-  if (current_level == nullptr) {
+PriceLevel *Side::Remove(int price,
+                         PriceLevel *current_level) { // Recursive remove.  Required to ensure balance of the tree
+  if (current_level == nullptr) { // PriceLevel not found
     return current_level;
   }
-  if (price < current_level->GetPrice()) {
-    current_level->left_ = Remove(price, current_level->left_);
-  } else if (price > current_level->GetPrice()) {
-    current_level->right_ = Remove(price, current_level->right_);
-  } else { // Found PriceLevel to remove
+  int current_level_price = current_level->GetPrice();
+
+  if (price == current_level_price) { // Found PriceLevel to remove
     if (current_level->left_ == nullptr) {// One child right and zero child remove
-      //current_level = current_level->right_;
       PriceLevel *level = current_level->right_;
       delete current_level;
       current_level = nullptr;
       return level;
-      //std::cout << "One child right or zero child remove" << std::endl;
     } else if (current_level->right_ == nullptr) {// One child left remove
-      //current_level = current_level->left_;
       PriceLevel *level = current_level->left_;
       delete current_level;
       current_level = nullptr;
       return level;
-      //std::cout << "One child left remove" << std::endl;
     } else { // Two child remove
       PriceLevel *iop = Max(current_level->left_); // Get in-order predecessor
       current_level->CopyIOP(iop);
       current_level->left_ = Remove(iop->GetPrice(), current_level->left_);
     }
+  } else if (price < current_level_price) { // Search for PriceLevel
+    current_level->left_ = Remove(price, current_level->left_);
+  } else {
+    current_level->right_ = Remove(price, current_level->right_);
   }
 
   BalanceTree(current_level); // Ensure AVL tree balance after removal
@@ -119,27 +117,23 @@ PriceLevel *Side::Remove(int price, PriceLevel *current_level) {
   return current_level;
 }
 
-int Side::GetHeight(PriceLevel *level) {
-  if (level == nullptr) {
-    return -1;
-  } else {
-    return level->height_;
+PriceLevel *Side::Min(PriceLevel *current_level) const {
+  if (current_level == nullptr) { // Empty book
+    return nullptr;
+  } else if (current_level->left_ == nullptr) { // Min found
+    return current_level;
+  } else { // Search left
+    return Min(current_level->left_);
   }
 }
 
-void Side::UpdateHeight(PriceLevel *current_level) {
-  if (current_level == nullptr) {
-    return;
-  } else {
-    current_level->height_ = 1 + std::max(GetHeight(current_level->left_), GetHeight(current_level->right_));
-  }
-}
-
-int Side::GetBalanceFactor(PriceLevel *level) {
-  if (level == nullptr) {
-    return 0;
-  } else {
-    return GetHeight(level->right_) - GetHeight(level->left_);
+PriceLevel *Side::Max(PriceLevel *current_level) const {
+  if (current_level == nullptr) {// Empty book
+    return nullptr;
+  } else if (current_level->right_ == nullptr) { // Max found
+    return current_level;
+  } else { // Search right
+    return Max(current_level->right_);
   }
 }
 
@@ -162,16 +156,15 @@ void Side::BalanceTree(PriceLevel *&current_level) {
     throw std::runtime_error(msg);
   }
 
-  if (balance_factor == 2) {
+  if (balance_factor == 2) { // Rebalance required
     int right_balance_factor = GetBalanceFactor(current_level->right_);
 
-    if (right_balance_factor == -1) {
-      //std::cout << "Right left rotation" << std::endl;
+    if (right_balance_factor == -1) { // RightLeft rotation
       RotateRightLeft(current_level);
     } else if (right_balance_factor == 1
-        || right_balance_factor == 0) // Can change to else once satisfied and after removing error checking below
+        || right_balance_factor
+            == 0) // Left rotation // Can change to else once satisfied and after removing error checking below
     {
-      //std::cout << "Left rotation" << std::endl;
       RotateLeft(current_level);
     } else {
       // Error checking
@@ -179,16 +172,15 @@ void Side::BalanceTree(PriceLevel *&current_level) {
       msg += std::to_string(right_balance_factor);
       throw std::runtime_error(msg);
     }
-  } else if (balance_factor == -2) {
+  } else if (balance_factor == -2) { // Rebalance required
     int left_balance_factor = GetBalanceFactor(current_level->left_);
 
-    if (left_balance_factor == 1) {
-      //std::cout << "Left right rotation" << std::endl;
+    if (left_balance_factor == 1) { // LeftRight rotation
       RotateLeftRight(current_level);
     } else if (left_balance_factor == -1
-        || left_balance_factor == 0) // Can change to else once satisfied and after removing error checking below
+        || left_balance_factor
+            == 0) // Right rotation // Can change to else once satisfied and after removing error checking below
     {
-      //std::cout << "Right rotation" << std::endl;
       RotateRight(current_level);
     } else {
       // Error checking
@@ -267,24 +259,28 @@ void Side::RotateLeftRight(PriceLevel *&current_level) {
   RotateRight(current_level);
 }
 
-PriceLevel *Side::Min(PriceLevel *current_level) {
-  if (current_level == nullptr)
-    return nullptr; // How do I want to handle this case?
-    //throw std::runtime_error("Error: Node not found");
-  else if (current_level->left_ == nullptr)
-    return current_level;
-  else
-    return Min(current_level->left_);
+int Side::GetHeight(const PriceLevel *level) {
+  if (level == nullptr) {
+    return -1;
+  } else {
+    return level->height_;
+  }
 }
 
-PriceLevel *Side::Max(PriceLevel *current_level) {
-  if (current_level == nullptr)
-    return nullptr; // How do I want to handle this case?
-    //throw std::runtime_error("Error: Node not found");
-  else if (current_level->right_ == nullptr)
-    return current_level;
-  else
-    return Max(current_level->right_);
+int Side::GetBalanceFactor(const PriceLevel *level) {
+  if (level == nullptr) {
+    return 0;
+  } else {
+    return GetHeight(level->right_) - GetHeight(level->left_);
+  }
+}
+
+void Side::UpdateHeight(PriceLevel *current_level) {
+  if (current_level == nullptr) {
+    return;
+  } else {
+    current_level->height_ = 1 + std::max(GetHeight(current_level->left_), GetHeight(current_level->right_));
+  }
 }
 
 PriceLevel *Side::DestroySide(PriceLevel *current_level) {
@@ -299,47 +295,47 @@ PriceLevel *Side::DestroySide(PriceLevel *current_level) {
   return nullptr;
 }
 
-void Side::InOrder(PriceLevel *level) {
+void Side::PrintInOrder(const PriceLevel *level) const {
   if (level != nullptr) {
-    InOrder(level->left_);
+    PrintInOrder(level->left_);
     std::cout << "Price Level : " << level->GetPrice() << std::endl;
     std::cout << "\tSize : " << level->GetSize() << " Num orders : " << level->NumOrders() << std::endl;
     for (const auto &iter : level->GetOrders()) {
       std::cout << "\t\tid: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
     }
-    InOrder(level->right_);
+    PrintInOrder(level->right_);
   }
 }
 
-void Side::ReverseOrder(PriceLevel *level) {
+void Side::PrintReverseOrder(const PriceLevel *level) const {
   if (level != nullptr) {
-    ReverseOrder(level->right_);
+    PrintReverseOrder(level->right_);
     std::cout << "Price Level : " << level->GetPrice() << std::endl;
     std::cout << "\tSize : " << level->GetSize() << " Num orders : " << level->NumOrders() << std::endl;
     for (const auto &iter : level->GetOrders()) {
       std::cout << "\t\tid: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
     }
-    ReverseOrder(level->left_);
+    PrintReverseOrder(level->left_);
   }
 }
 
-void Side::ToStringInOrder(PriceLevel *level, std::string &str) {
+void Side::InOrderString(const PriceLevel *level, std::string &str) const {
   if (level == nullptr) {
     return;
   }
 
-  ToStringInOrder(level->left_, str);
+  InOrderString(level->left_, str);
   str += (std::to_string(level->GetPrice()) + ' ');
 
   if (level->left_ == nullptr && level->right_ == nullptr) {
     return;
   }
 
-  ToStringInOrder(level->right_, str);
+  InOrderString(level->right_, str);
 
 }
 
-void Side::ToStringPreOrder(PriceLevel *level, std::string &str) {
+void Side::PreOrderString(const PriceLevel *level, std::string &str) const {
   if (level == nullptr) {
     return;
   }
@@ -350,48 +346,34 @@ void Side::ToStringPreOrder(PriceLevel *level, std::string &str) {
     return;
   }
 
-  ToStringPreOrder(level->left_, str);
-  ToStringPreOrder(level->right_, str);
+  PreOrderString(level->left_, str);
+  PreOrderString(level->right_, str);
 }
 
-void Side::ToDequeInOrder(PriceLevel *level, std::deque<PriceLevel *> &deq) {
-  if (level == nullptr) {
+void Side::GetSnapshot(PriceLevel *level, char side, int &n_levels, std::deque<PriceLevel *> &deq) const {
+  if (level == nullptr) { // If the PriceLevel is null
+    return; // Stop recursion
+  }
+
+  if (side == 'b') { // If getting the bid side
+    GetSnapshot(level->right_, side, n_levels, deq); // Get the highest PriceLevel (rightmost node)
+  } else { // Get the lowest PriceLevel (leftmost node)
+    GetSnapshot(level->left_, side, n_levels, deq);
+  }
+
+  if (n_levels > 0) { // If n_levels haven't already been added to the deque
+    deq.push_back(level); // Add the level
+    n_levels--; // Decrement n_levels
+  }
+
+  if ((level->left_ == nullptr && level->right_ == nullptr) || n_levels == 0) { // If the PriceLevel if a leaf node
+    // or if n_levels is 0 (we have added as many levels to the deque as needed), stop recursion
     return;
   }
 
-  ToDequeInOrder(level->left_, deq);
-  deq.push_back(level);
-
-  if (level->left_ == nullptr && level->right_ == nullptr) {
-    return;
-  }
-
-  ToDequeInOrder(level->right_, deq);
-
-}
-
-void Side::ToDequeInOrder(PriceLevel *level, char side, int &n_levels, std::deque<PriceLevel *> &deq) {
-  if (level == nullptr) {
-    return;
-  }
-
-  if (side == 'b') {
-    ToDequeInOrder(level->right_, side, n_levels, deq);
-  } else {
-    ToDequeInOrder(level->left_, side, n_levels, deq);
-  }
-
-  if (n_levels > 0) {
-    deq.push_back(level);
-    n_levels--;
-  }
-
-  if ((level->left_ == nullptr && level->right_ == nullptr) || n_levels == 0) {
-    return;
-  }
-  if (side == 'b') {
-    ToDequeInOrder(level->left_, side, n_levels, deq);
-  } else {
-    ToDequeInOrder(level->right_, side, n_levels, deq);
+  if (side == 'b') { // If getting the bid side
+    GetSnapshot(level->left_, side, n_levels, deq); // Get the next highest PriceLevel
+  } else { // Get the next lowest PriceLevel
+    GetSnapshot(level->right_, side, n_levels, deq);
   }
 }

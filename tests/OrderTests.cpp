@@ -8,18 +8,6 @@
 
 #include "Order.h"
 
-TEST_CASE ("Get side of order", "[OrderTests]") {
-  // Arrange
-  OrderUpdate update(1, 'b', 'a', 1, 1, 1);
-  Order order(update);
-
-  // Act
-  char side = order.GetSide();
-
-  // Assert
-  CHECK(side == 'b');
-}
-
 TEST_CASE ("Get price of order", "[OrderTests]") {
   // Arrange
   OrderUpdate update(1, 'b', 'a', 1, 1, 1);
@@ -31,6 +19,7 @@ TEST_CASE ("Get price of order", "[OrderTests]") {
   // Assert
   CHECK(price == 1);
 }
+
 TEST_CASE ("Get quantity of order", "[OrderTests]") {
   // Arrange
   OrderUpdate update(1, 'b', 'a', 1, 1, 1);
@@ -41,6 +30,18 @@ TEST_CASE ("Get quantity of order", "[OrderTests]") {
 
   // Assert
   CHECK(qty == 1);
+}
+
+TEST_CASE ("Get side of order", "[OrderTests]") {
+  // Arrange
+  OrderUpdate update(1, 'b', 'a', 1, 1, 1);
+  Order order(update);
+
+  // Act
+  char side = order.GetSide();
+
+  // Assert
+  CHECK(side == 'b');
 }
 
 TEST_CASE ("Update order quantity", "[OrderTests]") {

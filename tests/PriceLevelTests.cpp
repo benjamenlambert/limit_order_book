@@ -69,6 +69,23 @@ TEST_CASE ("Confirm size after adding order to price level", "[PriceLevelTests]"
   CHECK(level_size == 1);
 }
 
+TEST_CASE ("Confirm size after modifying order in price level", "[PriceLevelTests]") {
+  // Arrange
+  PriceLevel level(1);
+  OrderUpdate update_1(1, 'b', 'a', 1, 1, 1);
+  Order new_order_1(update_1);
+  level.AddOrder(update_1.id, new_order_1);
+
+  OrderUpdate update_2(2, 'b', 'm', 1, 1, 2);
+
+  // Act
+  level.ModifyOrder(update_2);
+  int level_size = level.GetSize();
+
+  // Assert
+  CHECK(level_size == 2);
+}
+
 TEST_CASE ("Confirm size after removing order from price level", "[PriceLevelTests]") {
   // Arrange
   PriceLevel level(1);
@@ -88,23 +105,6 @@ TEST_CASE ("Confirm size after removing order from price level", "[PriceLevelTes
 
   // Assert
   CHECK(level_size == 1);
-}
-
-TEST_CASE ("Confirm size after modifying order in price level", "[PriceLevelTests]") {
-  // Arrange
-  PriceLevel level(1);
-  OrderUpdate update_1(1, 'b', 'a', 1, 1, 1);
-  Order new_order_1(update_1);
-  level.AddOrder(update_1.id, new_order_1);
-
-  OrderUpdate update_2(2, 'b', 'm', 1, 1, 2);
-
-  // Act
-  level.ModifyOrder(update_2);
-  int level_size = level.GetSize();
-
-  // Assert
-  CHECK(level_size == 2);
 }
 
 TEST_CASE ("Get existing order from price level", "[PriceLevelTests]") {
