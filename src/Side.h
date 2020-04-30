@@ -6,10 +6,8 @@
 #define LIMIT_ORDER_BOOK_SRC_SIDE_H_
 
 #include <deque>
-#include <iostream>
 
 #include "PriceLevel.h"
-#include "Order.h"
 
 // One side of the book (bid or ask).
 // Implemented as an AVL tree containing all PriceLevels with non-zero quantity.  Each side of the order book is stored
@@ -21,7 +19,7 @@ class Side {
   ~Side();
 
   void AddLevel(PriceLevel *level);
-  PriceLevel *FindLevel(const int &price);
+  [[nodiscard]] PriceLevel *FindLevel(const int &price) const;
   void RemoveLevel(const int &price);
 
   [[nodiscard]] PriceLevel *FindMin() const;
@@ -43,7 +41,7 @@ class Side {
   // Adds a PriceLevel to the Side
   PriceLevel *Add(PriceLevel *level, PriceLevel *current_level);
   // Finds a PriceLevel on the Side.
-  PriceLevel *Find(int price, PriceLevel *current_level);
+  PriceLevel *Find(int price, PriceLevel *current_level) const;
   // Removes a PriceLevel on the Side
   PriceLevel *Remove(int price, PriceLevel *current_level);
 
@@ -70,8 +68,7 @@ class Side {
   PriceLevel *DestroySide(PriceLevel *current_level);
 
   // Print functions
-  void PrintInOrder(const PriceLevel *level) const;
-  void PrintReverseOrder(const PriceLevel *level) const;
+  void Print(const PriceLevel *level) const;
   // Print functions for testing
   void InOrderString(const PriceLevel *level, std::string &str) const;
   void PreOrderString(const PriceLevel *level, std::string &str) const;

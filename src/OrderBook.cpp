@@ -2,45 +2,88 @@
 // Created by Benjamen Lambert on 4/2/2020.
 //
 
-#include <fstream>
 #include <iomanip>
+#include <iostream>
 
 #include "OrderBook.h"
 
-void OrderBook::FormatOutputFile(std::ofstream &file, int n_levels) {
-  std::string col_headers = "timestamp,side,action,id,price,quantity,";
-
-  for (int n = 0; n < n_levels; n++) {
-    col_headers.append("bp" + std::to_string(n) + ",");
-    col_headers.append("bq" + std::to_string(n) + ",");
-  }
-
-  for (int n = 0; n < n_levels; n++) {
-    col_headers.append("ap" + std::to_string(n) + ",");
-    col_headers.append("aq" + std::to_string(n) + ",");
-  }
-
-  col_headers.pop_back();
-  col_headers.append("\n");
-
-  file << col_headers;
-}
-
 void OrderBook::UpdateBook(const OrderUpdate &update) {
-  if (update.action == 'a') {
-    AddOrder(update);
-  } else if (update.action == 'd') {
-    RemoveOrder(update);
-  } else { // Modify
-    ModifyOrder(update);
+  if (update.action == 'a') { // If the update is an add
+    AddOrder(update); // Add the order
+  } else if (update.action == 'd') { // If the update is a delete
+    RemoveOrder(update); // Remove the order
+  } else {
+    ModifyOrder(update); // Modify the order
   }
 }
 
-void OrderBook::PrintBook() {
+OrderBook::Snapshot OrderBook::GetSnapshot(const int &n_levels) const {
+
+  OrderBook::Snapshot snapshot; // Create an empty snapshot
+
+  bid_.GetSnapshot('b', n_levels, snapshot.first); // Add n_levels to the bid side
+  ask_.GetSnapshot('a', n_levels, snapshot.second); // Add n_levels to the ask side
+
+  return snapshot;
+}
+
+void OrderBook::FormatOutputFile(std::ofstream &file, const int &n_levels) {
+  file << "timestamp,side,action,id,price,quantity,"; // Write column labels for the update to the file
+
+  for (int n = 0; n < n_levels; ++n) { // Write column labels for n_levels of the bid snapshot to the file
+    file << ("bp" + std::to_string(n)) << "," << ("bq" + std::to_string(n)) << ",";
+  }
+
+  for (int n = 0; n < (n_levels - 1); ++n) { // Write column labels for n_levels-1 of the ask snapshot to the file
+    file << ("ap" + std::to_string(n)) << "," << ("aq" + std::to_string(n)) << ",";
+  }
+
+  file << ("ap" + std::to_string(n_levels - 1)) << "," << ("aq" + std::to_string(n_levels - 1))
+       << "\n"; // Write column labels
+  // for the last level of the ask snapshot to the file
+}
+
+void OrderBook::WriteToFile(std::ofstream &file,
+                            const OrderUpdate &update,
+                            OrderBook::Snapshot &snapshot,
+                            const int &n_levels) {
+
+  file << update.timestamp << ',' << update.side << ',' << update.action << ',' << update.id << ',' << update.price
+       << ','
+       << update.qty << ','; // Write the update to the file
+
+  for (int i = 0; i < n_levels; ++i) { // Write n_levels of the bid snapshot to the file
+    if (!snapshot.first.empty()) { // If the level is not empty
+      file << snapshot.first.front()->GetPrice() << ',' << snapshot.first.front()->GetSize()
+           << ','; // Write it to the file
+      snapshot.first.pop_front(); // Remove the level from the snapshot
+    } else {
+      file << ",0,"; // Write a blank price with size of 0
+    }
+  }
+  for (int i = 0; i < (n_levels - 1); ++i) { // Write n_levels-1 of the ask snapshot to the file
+    if (!snapshot.second.empty()) {  // If the level is not empty
+      file << snapshot.second.front()->GetPrice() << ',' << snapshot.second.front()->GetSize()
+           << ','; // Write it to the file
+      snapshot.second.pop_front(); // Remove the level from the snapshot
+    } else {
+      file << ",0,"; // Write a blank price with size of 0
+    }
+  }
+  if (!snapshot.second.empty()) { // If the last level of the ask snapshot is not empty
+    file << snapshot.second.front()->GetPrice() << ','
+         << snapshot.second.front()->GetSize(); // Write it to the file without a trailing comma
+  } else {
+    file << ",0"; // Write a blank price with size of 0 without a trailing zero
+  }
+  file << '\n';
+}
+
+void OrderBook::PrintBook() const {
   Print();
 }
 
-void OrderBook::PrintReport(std::string file_name, double duration) {
+void OrderBook::PrintReport(const std::string &file_name, const double &duration) const {
   std::cout << "************ REPORT ************\n" << std::endl;
   std::cout << " " << file_name << std::endl;
   std::cout << " " << adds_ << " add order messages." << std::endl;
@@ -54,51 +97,9 @@ void OrderBook::PrintReport(std::string file_name, double duration) {
   std::cout << "********************************\n" << std::endl;
 }
 
-void OrderBook::WriteToFile(std::ofstream &file,
-                            const OrderUpdate &update,
-                            OrderBook::Snapshot &snapshot,
-                            int n_levels) {
+// Private methods
 
-  file << update.timestamp << ',' << update.side << ',' << update.action << ',' << update.id << ',' << update.price
-       << ','
-       << update.qty << ',';
-
-  for (int i = 0; i < n_levels; i++) {
-    if (!snapshot.first.empty()) {
-      file << snapshot.first.front()->GetPrice() << ',' << snapshot.first.front()->GetSize() << ',';
-      snapshot.first.pop_front();
-    } else {
-      file << ",0,";
-    }
-  }
-  for (int i = 0; i < (n_levels - 1); i++) {
-    if (!snapshot.second.empty()) {
-      file << snapshot.second.front()->GetPrice() << ',' << snapshot.second.front()->GetSize() << ',';
-      snapshot.second.pop_front();
-    } else {
-      file << ",0,";
-    }
-  }
-  if (!snapshot.second.empty()) {
-    file << snapshot.second.front()->GetPrice() << ',' << snapshot.second.front()->GetSize();
-    snapshot.second.pop_front();
-  } else {
-    file << ",0";
-  }
-  file << '\n';
-}
-
-std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> OrderBook::GetSnapshot(int n_levels) {
-
-  OrderBook::Snapshot snapshot;
-
-  bid_.GetSnapshot('b', n_levels, snapshot.first);
-  ask_.GetSnapshot('a', n_levels, snapshot.second);
-
-  return snapshot;
-}
-
-Side *OrderBook::GetSide(char side) {
+Side *OrderBook::GetSide(const char &side) {
   if (side == 'b') {
     return &bid_;
   } else {
@@ -118,28 +119,28 @@ void OrderBook::AddOrder(const OrderUpdate &update) {
         == top_of_book_price) { // If the order price is equal to the top of the book, go straight there
       side->top_of_book_->AddOrder(update.id, order); // Insert the order
       tob_updates_++; // Update top of book count
-    } else { // The order is not equal to the top of the book, so have to find its level
+    } else { // The order is not equal to the top of the book
       PriceLevel *level = side->FindLevel(order_price);  // Find the price level
 
       if (level != nullptr) { // If it exists
         level->AddOrder(update.id, order); // Add the order
-      } else {
+      } else { // The price level does not exist
         auto *new_level = new PriceLevel(order_price); // Create the price level
         new_level->AddOrder(update.id, order); // Add the order to the price level
         side->AddLevel(new_level); // Add the price level to the book recursively to ensure tree balance
 
-        // Check to see if the level is a new top of book
+        // Check to see if the new level is a new top of book
         if (order.GetSide() == 'b') { // If the order is a bid
-          if (order_price > top_of_book_price) { // And it is greater than the current top of book
+          if (order_price > top_of_book_price) { // And its price is greater than the current top of book price
             side->top_of_book_ = new_level; // Update top_of_book_ on the bid side
           }
         } else if (order_price
-            < top_of_book_price) { // The order is an ask.  If it is less than the current top of the book
+            < top_of_book_price) { // The order is an ask.  If its price is less than the current top of the book
           side->top_of_book_ = new_level; // Update top_of_book_ on the ask side
         }
       }
     }
-  } else { // top_of_book is nullptr. This is the first order being added to the book, so must be a new level
+  } else { // top_of_book is nullptr. This is the first order being added to this side of the book
     auto *new_level = new PriceLevel(order.GetPrice()); // Create the price level
     new_level->AddOrder(update.id, order); // Add the order to the price level
     side->AddLevel(new_level); // Add the price level to the book
@@ -164,13 +165,13 @@ void OrderBook::RemoveOrder(const OrderUpdate &update) {
       }
     }
     tob_updates_++;
-  } else { // The order is not at the top of the book, so have to find its level
-    PriceLevel *level = side->FindLevel(update.price);
+  } else { // The order is not at the top of the book
+    PriceLevel *level = side->FindLevel(update.price); // Find the price level
 
     level->RemoveOrder(update.id); // Delete the order
 
     if (level->GetSize() == 0) { // If the size is now 0
-      side->RemoveLevel(update.price); // Delete the level
+      side->RemoveLevel(update.price); // Remove the level
     }
   }
   removes_++;
@@ -183,23 +184,23 @@ void OrderBook::ModifyOrder(const OrderUpdate &update) {
       == side->top_of_book_->GetPrice()) { // If the order price is equal to the top of the book, go straight there
     side->top_of_book_->ModifyOrder(update); // Update the order
     tob_updates_++;
-  } else {
-    PriceLevel *level = side->FindLevel(update.price);
+  } else { // The order is not at the top of the book
+    PriceLevel *level = side->FindLevel(update.price); // Find the price level
 
     level->ModifyOrder(update); // Modify the order
-
   }
   mods_++;
 }
 
-void OrderBook::Print() {
+void OrderBook::Print() const {
 
   ask_.PrintSide();
 
-  std::cout << "\n****************************************************************\n" << std::endl;
+  std::cout << "\n       ********Asks********       \n";
+  std::cout << "**********************************\n";
+  std::cout << "       ********Bids********       \n" << std::endl;
 
   bid_.PrintSide();
-
 }
 
 

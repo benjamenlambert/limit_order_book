@@ -1,12 +1,10 @@
 #include <chrono>
 #include <filesystem>
-#include <fstream>
 
 #include "Utilities.h"
 #include "OrderBook.h"
 
 int main() {
-  /*
   for (const auto
         &
         entry : std::filesystem::directory_iterator("../data/")) { // Process all data files in ../data/
@@ -25,7 +23,7 @@ int main() {
 
       int n_levels =
           5; // Number of levels to be retrieved in snapshot and written to file
-      book.FormatOutputFile(file, n_levels);
+      OrderBook::FormatOutputFile(file, n_levels);
 
       for (const auto &row : csv) {
         OrderUpdate update(std::stoull(row[0]),
@@ -38,10 +36,10 @@ int main() {
         book.UpdateBook(update); // Process the update
         OrderBook::Snapshot
             snapshot = book.GetSnapshot(n_levels); // Create snapshot of book
-        book.WriteToFile(file,
-                         update,
-                         snapshot,
-                         n_levels); // Write snapshot to file
+        OrderBook::WriteToFile(file,
+                               update,
+                               snapshot,
+                               n_levels); // Write snapshot to file
       }
 
       file.close();
@@ -53,8 +51,7 @@ int main() {
       book.PrintReport(file_name, duration); // Summary information
     }
   }
-   */
-
+  /*
   std::vector<std::vector<std::string>>
       csv = utilities::ReadCSV("../data/res_20190610.csv", true);
 
@@ -69,7 +66,7 @@ int main() {
 
   int n_levels =
       5; // Number of levels to be retrieved in snapshot and written to file
-  book.FormatOutputFile(file, n_levels);
+      OrderBook::FormatOutputFile(file, n_levels);
 
   for (const auto &row : csv) {
     OrderUpdate update(std::stoull(row[0]),
@@ -82,7 +79,7 @@ int main() {
     book.UpdateBook(update); // Process the update
     OrderBook::Snapshot
         snapshot = book.GetSnapshot(n_levels); // Create snapshot of book
-    book.WriteToFile(file,
+    OrderBook::WriteToFile(file,
                      update,
                      snapshot,
                      n_levels); // Write snapshot to file
@@ -97,6 +94,6 @@ int main() {
   book.PrintReport(file_name, duration); // Summary information
 
   //book.PrintBook();
-
+  */
   return 0;
 }

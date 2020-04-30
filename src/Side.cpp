@@ -2,6 +2,8 @@
 // Created by Benjamen Lambert on 3/31/2020.
 //
 
+#include <iostream>
+
 #include "Side.h"
 
 Side::~Side() {
@@ -12,7 +14,7 @@ void Side::AddLevel(PriceLevel *level) {
   root_ = Add(level, root_);
 }
 
-PriceLevel *Side::FindLevel(const int &price) {
+PriceLevel *Side::FindLevel(const int &price) const {
   return Find(price, root_);
 }
 
@@ -41,10 +43,10 @@ void Side::PreOrderString(std::string &str) const {
 }
 
 void Side::PrintSide() const {
-  PrintReverseOrder(root_);
+  Print(root_);
 }
 
-//Private
+// Private methods
 
 PriceLevel *Side::Add(PriceLevel *level,
                       PriceLevel *current_level) { // Recursive add.  Required to ensure balance of the tree
@@ -67,7 +69,7 @@ PriceLevel *Side::Add(PriceLevel *level,
   return current_level;
 }
 
-PriceLevel *Side::Find(int price, PriceLevel *current_level) { // Recursive find
+PriceLevel *Side::Find(int price, PriceLevel *current_level) const { // Recursive find
   if (current_level == nullptr) { // PriceLevel not found
     return current_level;
   } else {
@@ -295,27 +297,15 @@ PriceLevel *Side::DestroySide(PriceLevel *current_level) {
   return nullptr;
 }
 
-void Side::PrintInOrder(const PriceLevel *level) const {
+void Side::Print(const PriceLevel *level) const {
   if (level != nullptr) {
-    PrintInOrder(level->left_);
+    Print(level->right_);
     std::cout << "Price Level : " << level->GetPrice() << std::endl;
     std::cout << "\tSize : " << level->GetSize() << " Num orders : " << level->NumOrders() << std::endl;
     for (const auto &iter : level->GetOrders()) {
       std::cout << "\t\tid: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
     }
-    PrintInOrder(level->right_);
-  }
-}
-
-void Side::PrintReverseOrder(const PriceLevel *level) const {
-  if (level != nullptr) {
-    PrintReverseOrder(level->right_);
-    std::cout << "Price Level : " << level->GetPrice() << std::endl;
-    std::cout << "\tSize : " << level->GetSize() << " Num orders : " << level->NumOrders() << std::endl;
-    for (const auto &iter : level->GetOrders()) {
-      std::cout << "\t\tid: " << iter.first << " Qty: " << iter.second.GetQty() << std::endl;
-    }
-    PrintReverseOrder(level->left_);
+    Print(level->left_);
   }
 }
 
