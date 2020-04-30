@@ -84,17 +84,20 @@ void OrderBook::PrintBook() const {
 }
 
 void OrderBook::PrintReport(const std::string &file_name, const double &duration) const {
-  std::cout << "************ REPORT ************\n" << std::endl;
+  std::cout << "**************** REPORT ****************\n" << std::endl;
   std::cout << " " << file_name << std::endl;
   std::cout << " " << adds_ << " add order messages." << std::endl;
+  std::cout << " " << tob_adds_ << " top of book add order messages." << std::endl;
   std::cout << " " << removes_ << " remove order messages." << std::endl;
+  std::cout << " " << tob_removes_ << " top of book remove order messages." << std::endl;
   std::cout << " " << mods_ << " modify order messages." << std::endl;
-  std::cout << " " << tob_updates_ << " top of book updates." << std::endl;
+  std::cout << " " << tob_mods_ << " top of book modify order messages." << std::endl;
   std::cout << " " << (adds_ + removes_ + mods_) << " total messages." << std::endl;
+  std::cout << " " << (tob_adds_ + tob_removes_ + tob_mods_) << " total top of book messages." << std::endl;
   std::cout << " " << (duration / 1000000) << " seconds." << std::endl;
   std::cout << " " << std::setprecision(2) << duration / (adds_ + removes_ + mods_) << " microseconds per message.\n"
             << std::endl;
-  std::cout << "********************************\n" << std::endl;
+  std::cout << "****************************************\n" << std::endl;
 }
 
 // Private methods
@@ -118,7 +121,7 @@ void OrderBook::AddOrder(const OrderUpdate &update) {
     if (order_price
         == top_of_book_price) { // If the order price is equal to the top of the book, go straight there
       side->top_of_book_->AddOrder(update.id, order); // Insert the order
-      tob_updates_++; // Update top of book count
+      tob_adds_++; // Update top of book adds count
     } else { // The order is not equal to the top of the book
       PriceLevel *level = side->FindLevel(order_price);  // Find the price level
 
@@ -164,7 +167,7 @@ void OrderBook::RemoveOrder(const OrderUpdate &update) {
         side->top_of_book_ = side->FindMin(); // Or update top_of_book_ on the ask side to the new lowest ask
       }
     }
-    tob_updates_++;
+    tob_removes_++;
   } else { // The order is not at the top of the book
     PriceLevel *level = side->FindLevel(update.price); // Find the price level
 
@@ -183,7 +186,7 @@ void OrderBook::ModifyOrder(const OrderUpdate &update) {
   if (update.price
       == side->top_of_book_->GetPrice()) { // If the order price is equal to the top of the book, go straight there
     side->top_of_book_->ModifyOrder(update); // Update the order
-    tob_updates_++;
+    tob_mods_++;
   } else { // The order is not at the top of the book
     PriceLevel *level = side->FindLevel(update.price); // Find the price level
 

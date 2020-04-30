@@ -14,12 +14,13 @@ class OrderBook {
  public:
   typedef std::pair<std::deque<PriceLevel *>, std::deque<PriceLevel *>> Snapshot;
 
-  OrderBook() : adds_(0), removes_(0), mods_(0), tob_updates_(0) {
+  OrderBook() : adds_(0), removes_(0), mods_(0), tob_adds_(0), tob_removes_(0), tob_mods_(0) {
   }
 
   // Updates the book following an OrderUpdate
   void UpdateBook(const OrderUpdate &update);
 
+  Side *GetSide(const char &side);
   // Returns a pair of deques each with n_levels of PriceLevels.  Will return the max of n_levels or the number of levels currently on that side of the book
   [[nodiscard]] Snapshot GetSnapshot(const int &n_levels) const;
 
@@ -37,7 +38,7 @@ class OrderBook {
 
  private:
   // Returns the requested side of the book
-  Side *GetSide(const char &side);
+  //Side *GetSide(const char &side); // Make public in order to test top of book functionality
 
   void AddOrder(const OrderUpdate &update);
   void RemoveOrder(const OrderUpdate &update);
@@ -51,7 +52,9 @@ class OrderBook {
   int adds_;
   int removes_;
   int mods_;
-  int tob_updates_;
+  int tob_adds_;
+  int tob_removes_;
+  int tob_mods_;
 
 };
 
