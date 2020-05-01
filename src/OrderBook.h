@@ -20,7 +20,6 @@ class OrderBook {
   // Updates the book following an OrderUpdate
   void UpdateBook(const OrderUpdate &update);
 
-  //Side *GetSide(const char &side);
   // Returns a pair of deques each with n_levels of PriceLevels.  Will return the max of n_levels or the number of levels currently on that side of the book
   [[nodiscard]] Snapshot GetSnapshot(const int &n_levels) const;
 

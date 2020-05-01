@@ -149,71 +149,28 @@ void Side::BalanceTree(PriceLevel *&current_level) {
 
   int balance_factor = GetBalanceFactor(current_level);
 
-  // Error checking
-  if (balance_factor < -2 || balance_factor > 2) {
-    std::string msg("ERROR: Detected invalid initial balance factor: ");
-    msg += std::to_string(balance_factor);
-    std::cerr << "price: " << current_level->GetPrice() << std::endl;
-    std::cerr << "current_node left price: " << current_level->left_->GetPrice() << " current_node right price: "
-              << current_level->right_->GetPrice() << std::endl;
-    std::cerr << "current_node left height: " << GetHeight(current_level->left_) << " current_node right height: "
-              << GetHeight(current_level->right_) << std::endl;
-    throw std::runtime_error(msg);
-  }
-
   if (balance_factor == 2) { // Rebalance required
     int right_balance_factor = GetBalanceFactor(current_level->right_);
 
     if (right_balance_factor == -1) { // RightLeft rotation
       RotateRightLeft(current_level);
-    } else if (right_balance_factor == 1
-        || right_balance_factor
-            == 0) // Left rotation // Can change to else once satisfied and after removing error checking below
-    {
+    } else { // Left rotation
       RotateLeft(current_level);
-    } else {
-      // Error checking
-      std::string msg("ERROR: right_balance_factor has unexpected value: ");
-      msg += std::to_string(right_balance_factor);
-      throw std::runtime_error(msg);
     }
   } else if (balance_factor == -2) { // Rebalance required
     int left_balance_factor = GetBalanceFactor(current_level->left_);
 
     if (left_balance_factor == 1) { // LeftRight rotation
       RotateLeftRight(current_level);
-    } else if (left_balance_factor == -1
-        || left_balance_factor
-            == 0) // Right rotation // Can change to else once satisfied and after removing error checking below
-    {
+    } else { // Right rotation
       RotateRight(current_level);
-    } else {
-      // Error checking
-      std::string msg("ERROR: left_balance_factor has unexpected value: ");
-      msg += std::to_string(left_balance_factor);
-      throw std::runtime_error(msg);
     }
   }
 
   UpdateHeight(current_level);
-
-  // Final error check
-  balance_factor = GetBalanceFactor(current_level);
-  if (balance_factor < -1 || balance_factor > 1) {
-    std::string msg("ERROR: Invalid balance factor after BalanceTree: ");
-    msg += std::to_string(balance_factor);
-    throw std::runtime_error(msg);
-  }
 }
 
 void Side::RotateLeft(PriceLevel *&current_level) {
-  if (current_level == nullptr) {
-    throw std::runtime_error("ERROR: RotateLeft called on nullptr");
-  }
-  if (current_level->right_ == nullptr) {
-    throw std::runtime_error("ERROR: RotateLeft: right child is nullptr");
-  }
-
   PriceLevel *subtree_root = current_level;
   PriceLevel *subtree_root_right = current_level->right_;
   PriceLevel *subtree_root_right_left = current_level->right_->left_;
@@ -227,13 +184,6 @@ void Side::RotateLeft(PriceLevel *&current_level) {
 }
 
 void Side::RotateRight(PriceLevel *&current_level) {
-  if (current_level == nullptr) {
-    throw std::runtime_error("ERROR: RotateRight called on nullptr");
-  }
-  if (current_level->left_ == nullptr) {
-    throw std::runtime_error("ERROR: RotateRight: left child is nullptr");
-  }
-
   PriceLevel *subtree_root = current_level;
   PriceLevel *subtree_root_left = current_level->left_;
   PriceLevel *subtree_root_left_right = current_level->left_->right_;
@@ -247,19 +197,11 @@ void Side::RotateRight(PriceLevel *&current_level) {
 }
 
 void Side::RotateRightLeft(PriceLevel *&current_level) {
-  if (current_level == nullptr) {
-    throw std::runtime_error("ERROR: RotateRightLeft called on nullptr");
-  }
-
   RotateRight(current_level->right_);
   RotateLeft(current_level);
 }
 
 void Side::RotateLeftRight(PriceLevel *&current_level) {
-  if (current_level == nullptr) {
-    throw std::runtime_error("ERROR: RotateLeftRight called on nullptr");
-  }
-
   RotateLeft(current_level->left_);
   RotateRight(current_level);
 }
