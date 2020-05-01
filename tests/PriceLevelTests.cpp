@@ -14,9 +14,10 @@ TEST_CASE ("Add order to price level", "[PriceLevelTests]") {
 
   // Act
   level.AddOrder(update.id, new_order);
-  std::unordered_map<int, Order> orders = level.GetOrders();
 
   // Assert
+  std::unordered_map<int, Order> orders = level.GetOrders();
+
   // unordered_map::count(k) returns 1 if an element with a key equivalent to k is found, or zero otherwise
   CHECK(orders.count(update.id) == 1);
 }
@@ -31,9 +32,10 @@ TEST_CASE ("Modify existing order within price level", "[PriceLevelTests]") {
 
   // Act
   level.ModifyOrder(modify);
-  int order_qty = level.GetOrder(update.id).GetQty();
 
   // Assert
+  int order_qty = level.GetOrder(update.id).GetQty();
+
   CHECK(order_qty == 2);
 }
 
@@ -48,9 +50,10 @@ TEST_CASE ("Remove order from price level", "[PriceLevelTests]") {
 
   // Act
   level.RemoveOrder(update_2.id);
-  std::unordered_map<int, Order> orders = level.GetOrders();
 
   // Assert
+  std::unordered_map<int, Order> orders = level.GetOrders();
+
   // unordered_map::count(k) returns 1 if an element with a key equivalent to k is found, or zero otherwise
   CHECK(orders.count(update_1.id) == 0);
 }
@@ -63,9 +66,10 @@ TEST_CASE ("Confirm size after adding order to price level", "[PriceLevelTests]"
 
   // Act
   level.AddOrder(update.id, new_order);
-  int level_size = level.GetSize();
 
   // Assert
+  int level_size = level.GetSize();
+
   CHECK(level_size == 1);
 }
 
@@ -80,9 +84,10 @@ TEST_CASE ("Confirm size after modifying order in price level", "[PriceLevelTest
 
   // Act
   level.ModifyOrder(update_2);
-  int level_size = level.GetSize();
 
   // Assert
+  int level_size = level.GetSize();
+
   CHECK(level_size == 2);
 }
 
@@ -101,9 +106,10 @@ TEST_CASE ("Confirm size after removing order from price level", "[PriceLevelTes
 
   // Act
   level.RemoveOrder(update_3.id);
-  int level_size = level.GetSize();
 
   // Assert
+  int level_size = level.GetSize();
+
   CHECK(level_size == 1);
 }
 
@@ -114,7 +120,7 @@ TEST_CASE ("Get existing order from price level", "[PriceLevelTests]") {
   Order new_order(update);
   level.AddOrder(update.id, new_order);
 
-  // Act/Assert
+  // Act //Assert
   CHECK_NOTHROW(level.GetOrder(update.id));
 }
 
@@ -203,9 +209,10 @@ TEST_CASE ("Correctly copy IOP price", "[PriceLevelTests]") {
 
   // Act
   root_level->CopyIOP(iop_level);
-  int price = root_level->GetPrice();
 
   // Assert
+  int price = root_level->GetPrice();
+
   CHECK(price == 1);
 }
 
@@ -223,9 +230,9 @@ TEST_CASE ("Correctly copy IOP orders", "[PriceLevelTests]") {
 
   // Act
   root_level->CopyIOP(iop_level);
-  std::unordered_map<int, Order> orders = root_level->GetOrders();
 
   // Assert
+  std::unordered_map<int, Order> orders = root_level->GetOrders();
   std::string root_orders;
   for (auto &iter: orders) {
     root_orders += std::to_string(iter.first) + ' ';
@@ -249,8 +256,9 @@ TEST_CASE ("Correctly copy IOP size", "[PriceLevelTests]") {
 
   // Act
   root_level->CopyIOP(iop_level);
-  int size = root_level->GetSize();
 
   // Assert
+  int size = root_level->GetSize();
+
   CHECK(size == 2);
 }

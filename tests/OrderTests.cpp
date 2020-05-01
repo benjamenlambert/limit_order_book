@@ -51,8 +51,9 @@ TEST_CASE ("Update order quantity", "[OrderTests]") {
 
   // Act
   order.UpdateQty(2);
-  int qty = order.GetQty();
 
   // Assert
+  int qty = order.GetQty();
+
   CHECK(qty == 2);
 }
