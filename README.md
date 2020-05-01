@@ -44,6 +44,10 @@ side of the book to a file.  If the number of price levels in the book (or the n
 GetSnapshot) is less than the number of price levels requested, the price for the empty price levels is left blank and 
 the size is reported at 0. 
 
+# Tests
+
+Unit tests are implemented using the Catch2 test framework (https://github.com/catchorg/Catch2).
+
 # Additional Features to be Added
 
 Storage of a pointer to the next highest (in the case of an ask) or next lowest (in the case of a bid) price level within 
