@@ -202,7 +202,7 @@ TEST_CASE ("Write to file", "[OrderBookTests]") {
 ////********************************************************************************////
 //// GetSide must be changed to a public method in order to run the following tests ////
 ////********************************************************************************////
-
+/*
 TEST_CASE ("Get side of book", "[OrderBookTests]") {
   // Arrange
   OrderBook book;
@@ -261,7 +261,9 @@ TEST_CASE ("Update top of book after remove", "[OrderBookTests]") {
   book.UpdateBook(update_3);
 
   int tob_price = book.GetSide('b')->top_of_book_->GetPrice();
+  book.GetSide('b')->top_of_book_->GetOrder(1);
 
   // Assert
   CHECK(tob_price == 1);
 }
+*/

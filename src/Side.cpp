@@ -105,8 +105,11 @@ PriceLevel *Side::Remove(int price,
       return level;
     } else { // Two child remove
       PriceLevel *iop = Max(current_level->left_); // Get in-order predecessor
-      current_level->CopyIOP(iop);
-      current_level->left_ = Remove(iop->GetPrice(), current_level->left_);
+      current_level->CopyIOP(iop); // Copy iop price_, size_, and orders_ to current_level
+      if (iop == top_of_book_) { // If iop is top_of_book_
+        top_of_book_ = current_level; // Update top_of_book_ to point to current_level
+      }
+      current_level->left_ = Remove(iop->GetPrice(), current_level->left_); // Delete iop
     }
   } else if (price < current_level_price) { // Search for PriceLevel
     current_level->left_ = Remove(price, current_level->left_);

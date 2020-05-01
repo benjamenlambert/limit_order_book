@@ -20,7 +20,7 @@ class OrderBook {
   // Updates the book following an OrderUpdate
   void UpdateBook(const OrderUpdate &update);
 
-  Side *GetSide(const char &side);
+  //Side *GetSide(const char &side);
   // Returns a pair of deques each with n_levels of PriceLevels.  Will return the max of n_levels or the number of levels currently on that side of the book
   [[nodiscard]] Snapshot GetSnapshot(const int &n_levels) const;
 
@@ -38,7 +38,7 @@ class OrderBook {
 
  private:
   // Returns the requested side of the book
-  //Side *GetSide(const char &side); // Make public in order to test top of book functionality
+  Side *GetSide(const char &side); // Make public in order to test top of book functionality
 
   void AddOrder(const OrderUpdate &update);
   void RemoveOrder(const OrderUpdate &update);

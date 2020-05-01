@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCE_FILES src/main.cpp)
 add_executable(limit_order_book ${SOURCE_FILES})
 target_link_libraries(limit_order_book stdc++fs)
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 include_directories(src)
 add_subdirectory(src)
