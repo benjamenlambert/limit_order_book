@@ -84,7 +84,7 @@ void OrderBook::PrintBook() const {
 }
 
 void OrderBook::PrintReport(const std::string &file_name, const double &duration) const {
-  std::cout << "**************** REPORT ****************\n" << std::endl;
+  std::cout << "\n**************** REPORT ****************\n" << std::endl;
   std::cout << " " << file_name << std::endl;
   std::cout << " " << adds_ << " add order messages." << std::endl;
   std::cout << " " << tob_adds_ << " top of book add order messages." << std::endl;
@@ -97,7 +97,7 @@ void OrderBook::PrintReport(const std::string &file_name, const double &duration
   std::cout << " " << (duration / 1000000) << " seconds." << std::endl;
   std::cout << " " << std::setprecision(2) << duration / (adds_ + removes_ + mods_) << " microseconds per message.\n"
             << std::endl;
-  std::cout << "****************************************\n" << std::endl;
+  std::cout << "****************************************\n";
 }
 
 // Private methods

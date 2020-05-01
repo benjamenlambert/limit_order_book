@@ -17,6 +17,6 @@ std::vector<std::vector<std::string>> ReadCSV(const std::string &file_name, bool
 
 // Reformats a sting into a desired filename.  Used with entry.path() to reformat file name. name.csv converted to name_output.csv
 std::string FormatFileName(const std::string &file_name);
-};
+}
 
 #endif //LIMIT_ORDER_BOOK_SRC_UTILITIES_H_
