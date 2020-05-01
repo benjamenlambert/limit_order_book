@@ -50,7 +50,7 @@ class PriceLevel {
   int price_;
   // The total size (sum of all order quantities) at the PriceLevel
   int size_;
-  // Hash table containing the orders using the order is as the key
+  // Hash table containing the orders using the order id as the key
   std::unordered_map<int, Order> orders_;
 };
 

@@ -25,7 +25,7 @@ class OrderBook {
 
   // Writes column labels for the update and n_levels of a snapshot to the output file
   static void FormatOutputFile(std::ofstream &file, const int &n_levels);
-  // Writes the update and n_levels of the resulting snapshot to a file
+  // Writes the update and resulting price_ and size_ of n_levels of PriceLevels of the resulting snapshot to a file
   static void WriteToFile(std::ofstream &file, const OrderUpdate &update, Snapshot &snapshot, const int &n_levels);
 
   // Prints the price_, size_, num_orders_, and all individual orders for each PriceLevel on each Side of the OrderBook
