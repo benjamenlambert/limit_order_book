@@ -33,7 +33,7 @@ class OrderBook {
   // Prints a summary of the OrderBook including the number of add, remove, modify, and top of book messages.  Also includes
   // the total time (not including the time to read the data) and the average processing time per update (not including
   // the time to read the data)
-  void PrintReport(const std::string &file_name, const double &duration) const;
+  void PrintReport(const std::string &title, const double &duration) const;
 
  private:
   // Returns the requested side of the book

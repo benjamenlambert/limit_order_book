@@ -83,9 +83,9 @@ void OrderBook::PrintBook() const {
   Print();
 }
 
-void OrderBook::PrintReport(const std::string &file_name, const double &duration) const {
+void OrderBook::PrintReport(const std::string &title, const double &duration) const {
   std::cout << "\n**************** REPORT ****************\n" << std::endl;
-  std::cout << " " << file_name << std::endl;
+  std::cout << " " << title << std::endl;
   std::cout << " " << adds_ << " add order messages." << std::endl;
   std::cout << " " << tob_adds_ << " top of book add order messages." << std::endl;
   std::cout << " " << removes_ << " remove order messages." << std::endl;
