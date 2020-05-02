@@ -34,7 +34,7 @@ int main() {
   file.open("demo.csv");
 
   auto start =
-      std::chrono::steady_clock::now(); // Total time process read updates from memory, process book, and write to file
+      std::chrono::steady_clock::now(); // Total time to read updates, process book, and write to file
 
   int n_levels = 2; // Number of levels to be retrieved in snapshot and written to file
 
