@@ -251,17 +251,17 @@ TEST_CASE ("Get side snapshot", "[SideTests]") {
   //Arrange
   Side bid;
 
-  OrderUpdate update_1(1, 'b', 'a', 1, 1, 1);
-  Order order_1(update_1);
-  auto *level_1 = new PriceLevel(1);
-  bid.AddLevel(level_1);
-  level_1->AddOrder(update_1.id, order_1);
-
-  OrderUpdate update_2(2, 'b', 'a', 2, 2, 1);
+  OrderUpdate update_2(1, 'b', 'a', 1, 2, 1);
   Order order_2(update_2);
   auto *level_2 = new PriceLevel(2);
   bid.AddLevel(level_2);
   level_2->AddOrder(update_2.id, order_2);
+
+  OrderUpdate update_1(2, 'b', 'a', 2, 1, 1);
+  Order order_1(update_1);
+  auto *level_1 = new PriceLevel(1);
+  bid.AddLevel(level_1);
+  level_1->AddOrder(update_1.id, order_1);
 
   OrderUpdate update_3(3, 'b', 'a', 3, 3, 1);
   Order order_3(update_3);

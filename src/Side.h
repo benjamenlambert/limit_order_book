@@ -34,6 +34,8 @@ class Side {
   // Prints the price_, size_, num_orders_, and all individual orders for each PriceLevel on the Side
   void PrintSide() const;
 
+  void PrintParent() const;
+
   // Pointer to the PriceLevel at the top of the book
   PriceLevel *top_of_book_;
 
@@ -72,6 +74,8 @@ class Side {
   // Print functions for testing
   void InOrderString(const PriceLevel *level, std::string &str) const;
   void PreOrderString(const PriceLevel *level, std::string &str) const;
+
+  void PrintParent(const PriceLevel *level) const;
 
   void GetSnapshot(PriceLevel *level, char side, int &n_levels, std::deque<PriceLevel *> &deq) const;
 

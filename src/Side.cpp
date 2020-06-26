@@ -38,6 +38,10 @@ void Side::InOrderString(std::string &str) const {
   InOrderString(root_, str);
 }
 
+void Side::PrintParent() const {
+  PrintParent(root_);
+}
+
 void Side::PreOrderString(std::string &str) const {
   PreOrderString(root_, str);
 }
@@ -58,8 +62,10 @@ PriceLevel *Side::Add(PriceLevel *level,
 
   if (level_price < current_level_price) { // Search for PriceLevel
     current_level->left_ = Add(level, current_level->left_);
+    current_level->left_->parent_ = current_level;
   } else if (level_price > current_level_price) {
     current_level->right_ = Add(level, current_level->right_);
+    current_level->right_->parent_ = current_level;
   } else { // PriceLevel found.  Should not happen as no duplicates should exist
     return current_level;
   }
@@ -95,11 +101,15 @@ PriceLevel *Side::Remove(int price,
   if (price == current_level_price) { // Found PriceLevel to remove
     if (current_level->left_ == nullptr) {// One child right and zero child remove
       PriceLevel *level = current_level->right_;
+      if (current_level->right_ != nullptr) { // Update child's parent in the case of a one child right remove
+        level->parent_ = current_level->parent_;
+      }
       delete current_level;
       current_level = nullptr;
       return level;
     } else if (current_level->right_ == nullptr) {// One child left remove
       PriceLevel *level = current_level->left_;
+      level->parent_ = current_level->parent_; // Update child's parent
       delete current_level;
       current_level = nullptr;
       return level;
@@ -154,16 +164,20 @@ void Side::BalanceTree(PriceLevel *&current_level) {
 
     if (right_balance_factor == -1) { // RightLeft rotation
       RotateRightLeft(current_level);
+      std::cout << "RightLeft rotation" << std::endl;
     } else { // Left rotation
       RotateLeft(current_level);
+      std::cout << "Left rotation" << std::endl;
     }
   } else if (balance_factor == -2) { // Rebalance required
     int left_balance_factor = GetBalanceFactor(current_level->left_);
 
     if (left_balance_factor == 1) { // LeftRight rotation
       RotateLeftRight(current_level);
+      std::cout << "LeftRight rotation" << std::endl;
     } else { // Right rotation
       RotateRight(current_level);
+      std::cout << "Right rotation" << std::endl;
     }
   }
 
@@ -310,5 +324,20 @@ void Side::GetSnapshot(PriceLevel *level, char side, int &n_levels, std::deque<P
     GetSnapshot(level->left_, side, n_levels, deq); // Get the next highest PriceLevel
   } else { // Get the next lowest PriceLevel
     GetSnapshot(level->right_, side, n_levels, deq);
+  }
+}
+
+void Side::PrintParent(const PriceLevel *level) const {
+  if (level != nullptr) {
+    PrintParent(level->right_);
+    std::cout << "Price Level : " << level->GetPrice() << std::endl;
+
+    if (level->parent_ != nullptr) {
+      std::cout << "Parent Price Level : " << level->parent_->GetPrice() << std::endl;
+    } else {
+      std::cout << "Parent Price Level : nullptr" << std::endl;
+    }
+
+    PrintParent(level->left_);
   }
 }
