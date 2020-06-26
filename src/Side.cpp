@@ -164,20 +164,20 @@ void Side::BalanceTree(PriceLevel *&current_level) {
 
     if (right_balance_factor == -1) { // RightLeft rotation
       RotateRightLeft(current_level);
-      std::cout << "RightLeft rotation" << std::endl;
+      //std::cout << "RightLeft rotation" << std::endl;
     } else { // Left rotation
       RotateLeft(current_level);
-      std::cout << "Left rotation" << std::endl;
+      //std::cout << "Left rotation" << std::endl;
     }
   } else if (balance_factor == -2) { // Rebalance required
     int left_balance_factor = GetBalanceFactor(current_level->left_);
 
     if (left_balance_factor == 1) { // LeftRight rotation
       RotateLeftRight(current_level);
-      std::cout << "LeftRight rotation" << std::endl;
+      //std::cout << "LeftRight rotation" << std::endl;
     } else { // Right rotation
       RotateRight(current_level);
-      std::cout << "Right rotation" << std::endl;
+      //std::cout << "Right rotation" << std::endl;
     }
   }
 
@@ -188,6 +188,12 @@ void Side::RotateLeft(PriceLevel *&current_level) {
   PriceLevel *subtree_root = current_level;
   PriceLevel *subtree_root_right = current_level->right_;
   PriceLevel *subtree_root_right_left = current_level->right_->left_;
+
+  subtree_root_right->parent_ = subtree_root->parent_;
+  subtree_root->parent_ = subtree_root_right;
+  if (subtree_root_right_left != nullptr) {
+    subtree_root_right_left->parent_ = subtree_root;
+  }
 
   subtree_root->right_ = subtree_root_right_left;
   subtree_root_right->left_ = subtree_root;
@@ -201,6 +207,12 @@ void Side::RotateRight(PriceLevel *&current_level) {
   PriceLevel *subtree_root = current_level;
   PriceLevel *subtree_root_left = current_level->left_;
   PriceLevel *subtree_root_left_right = current_level->left_->right_;
+
+  subtree_root_left->parent_ = subtree_root->parent_;
+  subtree_root->parent_ = subtree_root_left;
+  if (subtree_root_left_right != nullptr) {
+    subtree_root_left_right->parent_ = subtree_root;
+  }
 
   subtree_root->left_ = subtree_root_left_right;
   subtree_root_left->right_ = subtree_root;
