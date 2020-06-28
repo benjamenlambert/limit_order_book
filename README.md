@@ -14,8 +14,9 @@ price, using the order ID as the key.
 An AVL tree is used to hold all price levels with non-zero quantity on a particular side of the book.  If most activity 
 takes place at or near the top of the book, a linked list may be preferred to an AVL tree.  However, this particular 
 implementation contains a pointer the the top of the book, which ensures the same performance as a linked list for 
-orders at the top of the book (with the exception of an order which creates a new top of book price level or the removal 
-of an order which results in a new top of book price level).
+orders at the top of the book (with the exception of an order which creates a new top of book price level).  In addition, 
+each price level contains a pointer to its parent price level, which allows the new top of book subsequent to a 
+deletion of the previous top of book to be found in constant time.
 
 # Performance
 
@@ -23,8 +24,7 @@ Insertions of the first order at a particular price level are performed in O(lg 
 levels on the side of the book where the order is being inserted.  Subsequent order insertions at that price level are 
 also performed in O(lg n) time _except in the case of insertions at the current top of book, which are performed in O(1) 
 time_.  Removals and modifications of orders are performed in O(lg n) time _except in the case of removals and modifications 
-at the current top of book, which are performed in O(1) time_ (with the exception of the removal of an order which results 
-in a new top of book price level).
+at the current top of book, which are performed in O(1) time._
 
 # Functionality
 
@@ -49,9 +49,3 @@ total processing time, and processing time per order.
 
 Unit tests are implemented using the Catch2 test framework (https://github.com/catchorg/Catch2).  Note that some test 
 related to top of book functionality require the OrderBook::GetSide method be made public. 
-
-# Additional Features to be Added
-
-Storage of a pointer to the next highest (in the case of an ask) or next lowest (in the case of a bid) price level within 
-the PriceLevel class would improve finding the new top of book in the event that the current top of book is removed from 
-O(lg n) to O(1) time.
