@@ -7,7 +7,7 @@ Limit order book written in C++.
 Each side of the order book is implemented as an AVL tree containing all price levels on that side of the book with 
 non-zero quantity.  Each side of the book also contains a pointer to the top of the book (highest price level on the bid 
 side or lowest price level on the ask side).  Each price level contains a hash table which contains all orders at that 
-price, using the order ID as the key.  Each price level also contains a pointer to its parent price level.                                               level
+price, using the order ID as the key.  Each price level also contains a pointer to its parent price level.
 
 # Design Considerations
 
