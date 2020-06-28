@@ -6,6 +6,8 @@
 
 int main() {
 
+  bool write_to_file = false;
+
   for (const auto
         &
         entry : std::filesystem::directory_iterator("../data/")) { // Process all data files in ../data/
@@ -37,10 +39,13 @@ int main() {
         book.UpdateBook(update); // Process the update
         OrderBook::Snapshot
             snapshot = book.GetSnapshot(n_levels); // Create snapshot of book
-        OrderBook::WriteToFile(file,
-                               update,
-                               snapshot,
-                               n_levels); // Write snapshot to file
+
+        if (write_to_file) {
+          OrderBook::WriteToFile(file,
+                                 update,
+                                 snapshot,
+                                 n_levels); // Write snapshot to file
+        }
       }
 
       auto stop = std::chrono::steady_clock::now();
