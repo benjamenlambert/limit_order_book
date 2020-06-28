@@ -160,12 +160,19 @@ void OrderBook::RemoveOrder(const OrderUpdate &update) {
       == top_of_book_price) { // If the order price is equal to the top of the book, go straight there
     side->top_of_book_->RemoveOrder(update.id); // Remove the order
     if (side->top_of_book_->GetSize() == 0) { // If the size of the top_of_book_ is now 0
-      side->RemoveLevel(top_of_book_price); // Remove the level recursively to ensure tree balance
-      if (update.side == 'b') {
-        side->top_of_book_ = side->FindMax(); // And update top_of_book_ on the bid side to the new highest bid
-      } else {
-        side->top_of_book_ = side->FindMin(); // Or update top_of_book_ on the ask side to the new lowest ask
+      if (update.side == 'b') { // In the case of the bid
+        if (side->top_of_book_->left_ == nullptr) { // Update top_of_book_ to be either the parent
+          side->top_of_book_ = side->top_of_book_->parent_;
+        } else { // or left child of the to be deleted top_of_book_
+          side->top_of_book_ = side->top_of_book_->left_;
+        }
+      } else if (side->top_of_book_->right_
+          == nullptr) { // In the case of the ask update top_of_book_ to be either the parent
+        side->top_of_book_ = side->top_of_book_->parent_;
+      } else { // or right child of the to be deleted top_of_book_
+        side->top_of_book_ = side->top_of_book_->right_;
       }
+      side->RemoveLevel(top_of_book_price); // Remove the level recursively to ensure tree balance
     }
     tob_removes_++;
   } else { // The order is not at the top of the book

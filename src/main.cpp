@@ -52,42 +52,5 @@ int main() {
       book.PrintReport(file_name, duration); // Summary information
     }
   }
-
-/*
-  Side bid;
-  auto level_1 = new PriceLevel(1);
-  auto level_2 = new PriceLevel(2);
-  auto level_3 = new PriceLevel(3);
-  auto level_4 = new PriceLevel(4);
-  auto level_5 = new PriceLevel(5);
-  auto level_6 = new PriceLevel(6);
-  auto level_7 = new PriceLevel(7);
-
-  bid.AddLevel(level_3);
-  bid.AddLevel(level_2);
-  bid.AddLevel(level_5);
-  bid.AddLevel(level_1);
-  bid.AddLevel(level_4);
-  bid.AddLevel(level_6);
-  bid.AddLevel(level_7);
-
-  bid.PrintParent();
-
-  std::string pre_order;
-  bid.PreOrderString(pre_order); // Save node key values to in_order
-  pre_order.pop_back(); // Remove trailing space
-  std::cout << pre_order << std::endl;
-
-  std::cout << "----------------------------" << std::endl;
-  bid.RemoveLevel(1);
-
-  bid.PrintParent();
-
-  pre_order.clear();
-  bid.PreOrderString(pre_order); // Save node key values to in_order
-  pre_order.pop_back(); // Remove trailing space
-  std::cout << pre_order << std::endl;
-  */
-
   return 0;
 }

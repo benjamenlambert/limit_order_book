@@ -164,20 +164,16 @@ void Side::BalanceTree(PriceLevel *&current_level) {
 
     if (right_balance_factor == -1) { // RightLeft rotation
       RotateRightLeft(current_level);
-      //std::cout << "RightLeft rotation" << std::endl;
     } else { // Left rotation
       RotateLeft(current_level);
-      //std::cout << "Left rotation" << std::endl;
     }
   } else if (balance_factor == -2) { // Rebalance required
     int left_balance_factor = GetBalanceFactor(current_level->left_);
 
     if (left_balance_factor == 1) { // LeftRight rotation
       RotateLeftRight(current_level);
-      //std::cout << "LeftRight rotation" << std::endl;
     } else { // Right rotation
       RotateRight(current_level);
-      //std::cout << "Right rotation" << std::endl;
     }
   }
 
