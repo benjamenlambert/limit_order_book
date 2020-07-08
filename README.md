@@ -32,10 +32,10 @@ number of price levels on the given side of the book, whichever is less.  The sn
 containing the desired number of price levels or the current number of price levels on the given side of the book, 
 whichever is less.
 
-WriteToFile writes an order update and the price and size of the desired number of price levels of the resulting snapshot 
-to a file.  If the number of price levels in the book (or the number of price levels returned by 
+WriteToFile writes an order update and the price, size, and number of orders of the desired number of price levels of 
+the resulting snapshot to a file.  If the number of price levels in the book (or the number of price levels returned by 
 GetSnapshot) is less than the number of price levels requested, the price for the empty price levels is left blank and 
-the size is reported at 0. 
+the size and number of orders are reported as 0. 
 
 PrintBook prints the current state of the book, which includes the price, size, number of orders, and the 
 individual order ID and size for each order which comprises the price level for each price level in the book.

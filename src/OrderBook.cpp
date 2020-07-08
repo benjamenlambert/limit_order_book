@@ -31,16 +31,16 @@ void OrderBook::FormatOutputFile(std::ofstream &file, const int &n_levels) {
   file << "timestamp,side,action,id,price,quantity,"; // Write column labels for the update to the file
 
   for (int n = 0; n < n_levels; ++n) { // Write column labels for n_levels of the bid snapshot to the file
-    file << ("bp" + std::to_string(n)) << "," << ("bq" + std::to_string(n)) << ",";
+    file << ("bp" + std::to_string(n)) << "," << ("bq" + std::to_string(n)) << "," << ("bn" + std::to_string(n)) << ",";
   }
 
   for (int n = 0; n < (n_levels - 1); ++n) { // Write column labels for n_levels-1 of the ask snapshot to the file
-    file << ("ap" + std::to_string(n)) << "," << ("aq" + std::to_string(n)) << ",";
+    file << ("ap" + std::to_string(n)) << "," << ("aq" + std::to_string(n)) << "," << ("an" + std::to_string(n)) << ",";
   }
 
-  file << ("ap" + std::to_string(n_levels - 1)) << "," << ("aq" + std::to_string(n_levels - 1))
-       << "\n"; // Write column labels
-  // for the last level of the ask snapshot to the file
+  file << ("ap" + std::to_string(n_levels - 1)) << "," << ("aq" + std::to_string(n_levels - 1)) << ","
+       << ("an" + std::to_string(n_levels - 1))
+       << "\n"; // Write column labels for the last level of the ask snapshot to the file
 }
 
 void OrderBook::WriteToFile(std::ofstream &file,
@@ -54,27 +54,28 @@ void OrderBook::WriteToFile(std::ofstream &file,
 
   for (int i = 0; i < n_levels; ++i) { // Write n_levels of the bid snapshot to the file
     if (!snapshot.first.empty()) { // If the level is not empty
-      file << snapshot.first.front()->GetPrice() << ',' << snapshot.first.front()->GetSize()
-           << ','; // Write it to the file
+      file << snapshot.first.front()->GetPrice() << ',' << snapshot.first.front()->GetSize() << ','
+           << snapshot.first.front()->NumOrders() << ','; // Write it to the file
       snapshot.first.pop_front(); // Remove the level from the snapshot
     } else {
-      file << ",0,"; // Write a blank price with size of 0
+      file << ",0,0,"; // Write a blank price with size of 0
     }
   }
   for (int i = 0; i < (n_levels - 1); ++i) { // Write n_levels-1 of the ask snapshot to the file
     if (!snapshot.second.empty()) {  // If the level is not empty
-      file << snapshot.second.front()->GetPrice() << ',' << snapshot.second.front()->GetSize()
-           << ','; // Write it to the file
+      file << snapshot.second.front()->GetPrice() << ',' << snapshot.second.front()->GetSize() << ','
+           << snapshot.second.front()->NumOrders() << ','; // Write it to the file
       snapshot.second.pop_front(); // Remove the level from the snapshot
     } else {
-      file << ",0,"; // Write a blank price with size of 0
+      file << ",0,0,"; // Write a blank price with size and number of orders of 0
     }
   }
   if (!snapshot.second.empty()) { // If the last level of the ask snapshot is not empty
     file << snapshot.second.front()->GetPrice() << ','
-         << snapshot.second.front()->GetSize(); // Write it to the file without a trailing comma
+         << snapshot.second.front()->GetSize() << ','
+         << snapshot.second.front()->NumOrders(); // Write it to the file without a trailing comma
   } else {
-    file << ",0"; // Write a blank price with size of 0 without a trailing zero
+    file << ",0,0"; // Write a blank price with and number of orders of 0 without a trailing zero
   }
   file << '\n';
 }

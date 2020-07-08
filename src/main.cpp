@@ -57,5 +57,9 @@ int main() {
       book.PrintReport(file_name, duration); // Summary information
     }
   }
+
+  std::cout << "\nPress enter to exit...";
+  std::cin.ignore();
+
   return 0;
 }

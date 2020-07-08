@@ -169,7 +169,7 @@ TEST_CASE ("Format output file", "[OrderBookTests]") {
     column_lables.append(line);
   }
 
-  CHECK(column_lables == "timestamp,side,action,id,price,quantity,bp0,bq0,ap0,aq0");
+  CHECK(column_lables == "timestamp,side,action,id,price,quantity,bp0,bq0,bn0,ap0,aq0,an0");
 }
 
 TEST_CASE ("Write to file", "[OrderBookTests]") {
@@ -197,7 +197,7 @@ TEST_CASE ("Write to file", "[OrderBookTests]") {
   while (std::getline(input_file, line)) {
     write.append(line);
   }
-  CHECK(write == "1,b,a,1,1,1,1,1,,0");
+  CHECK(write == "1,b,a,1,1,1,1,1,1,,0,0");
 }
 
 ////********************************************************************************////
